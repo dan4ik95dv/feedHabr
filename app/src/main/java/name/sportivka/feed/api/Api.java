@@ -18,7 +18,7 @@ import retrofit2.http.QueryMap;
  * Created by daniil on 22.02.17.
  */
 
-public interface FeedApi {
+public interface Api {
 
     public static final String QUERY_EXCLUDE = "exclude";
     public static final String QUERY_GET_ARTICLE = "get_article";

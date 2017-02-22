@@ -3,8 +3,8 @@ apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'com.getkeepsafe.dexcount'
 
 //Load credentials
-def keystoreProperties = new Properties()
-keystoreProperties.load(new FileInputStream(rootProject.file("credentials.properties")))
+def credentialsProperties = new Properties()
+credentialsProperties.load(new FileInputStream(rootProject.file("credentials.properties")))
 
 
 //Libraries versions
@@ -74,19 +74,21 @@ android {
         }
 
         release {
-            storeFile file(keystoreProperties['storeFile'])
-            storePassword keystoreProperties['storePassword']
-            keyAlias keystoreProperties['keyAlias']
-            keyPassword keystoreProperties['keyPassword']
+            storeFile file(credentialsProperties['storeFile'])
+            storePassword credentialsProperties['storePassword']
+            keyAlias credentialsProperties['keyAlias']
+            keyPassword credentialsProperties['keyPassword']
         }
     }
 
     buildTypes {
         debug {
+            buildConfigField "String", "API_KEY", credentialsProperties['apiKeyDebug']
             minifyEnabled false
             signingConfig signingConfigs.debug
         }
         release {
+            buildConfigField "String", "API_KEY", credentialsProperties['apiKeyRelease']
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release

@@ -2,6 +2,7 @@ package name.sportivka.feed.api;
 
 import java.io.IOException;
 
+import name.sportivka.feed.BuildConfig;
 import name.sportivka.feed.Constants;
 import okhttp3.Interceptor;
 import okhttp3.Request;
@@ -18,7 +19,7 @@ public class MainIntercepter implements Interceptor {
         Request originRequest = chain.request();
         Request.Builder builder = originRequest.newBuilder();
         builder.addHeader("User-Agent", Constants.USER_AGENT);
-        builder.addHeader("apikey", Constants.API_KEY);
+        builder.addHeader("apikey", BuildConfig.API_KEY);
         return chain.proceed(builder.build());
     }
 }
