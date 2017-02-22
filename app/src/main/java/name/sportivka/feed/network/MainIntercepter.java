@@ -1,4 +1,4 @@
-package name.sportivka.feed.api;
+package name.sportivka.feed.network;
 
 import java.io.IOException;
 
