@@ -25,6 +25,9 @@ public interface Api {
     public static final String QUERY_INCLUDE = "include";
     public static final String QUERY_LIMIT = "limit";
 
+    @GET("post/{post}")
+    Call<Response<Post>> getPost(@Path("post") long post, @Query("get_article") boolean getArticle);
+
     @GET("posts/all")
     Call<Response<List<Post>>> getPubAll(@Query("page") int page, @QueryMap Map<String, String> map);
 
@@ -63,6 +66,5 @@ public interface Api {
 
     @GET("hubs/categories/{category}")
     Call<Response<List<Hub>>> getHubsForCategory(@Path("category") String category, @Query("page") int page);
-
 
 }
