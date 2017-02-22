@@ -138,11 +138,7 @@ dependencies {
      */
 
     compile "com.squareup.retrofit2:retrofit:${retrofit_version}"
-    compile("com.squareup.retrofit2:converter-simplexml:${retrofit_version}") {
-        exclude module: 'stax-api'
-        exclude module: 'stax'
-        exclude module: 'xpp3'
-    }
+    compile "com.squareup.retrofit2:converter-gson:${retrofit_version}"
 
     /**
      * Unit,Functional testing
