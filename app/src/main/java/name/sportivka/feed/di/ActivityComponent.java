@@ -1,5 +1,6 @@
 package name.sportivka.feed.di;
 
+import name.sportivka.feed.ui.activity.BaseActivity;
 import name.sportivka.feed.ui.activity.MainActivity;
 import name.sportivka.feed.ui.activity.SplashActivity;
 
@@ -8,6 +9,9 @@ import name.sportivka.feed.ui.activity.SplashActivity;
  */
 
 public interface ActivityComponent {
+    void inject(BaseActivity baseActivity);
+
     void inject(MainActivity mainActivity);
+
     void inject(SplashActivity splashActivity);
 }

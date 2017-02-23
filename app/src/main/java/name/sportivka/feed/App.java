@@ -16,11 +16,12 @@ import name.sportivka.feed.di.DaggerAppComponent;
 
 public class App extends Application {
     AppComponent appComponent;
+
     @Override
     public void onCreate() {
         super.onCreate();
         if (BuildConfig.DEBUG)
-            Stetho.initialize(Stetho.newInitializerBuilder(this).build());
+            Stetho.initializeWithDefaults(this);
 
         FlowManager.init(new FlowConfig.Builder(this).openDatabasesOnInit(true).build());
 

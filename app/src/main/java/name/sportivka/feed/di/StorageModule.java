@@ -4,16 +4,15 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import javax.inject.Singleton;
-
 import dagger.Module;
 import dagger.Provides;
+import name.sportivka.feed.di.scope.AppScope;
 
 @Module(includes = AppModule.class)
 public class StorageModule {
 
     @Provides
-    @Singleton
+    @AppScope
     SharedPreferences providesSharedPreferences(Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context);
     }

@@ -10,11 +10,11 @@ public class Simple {
     @SerializedName("ok")
     boolean ok;
     @SerializedName("additional")
-    private Object additional;
+    Object additional;
     @SerializedName("message")
-    private String message;
+    String message;
     @SerializedName("server_time")
-    private String serverTime;
+    String serverTime;
 
     public Object getAdditional() {
         return additional;

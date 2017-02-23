@@ -13,29 +13,29 @@ import name.sportivka.feed.model.MyDatabase;
  */
 @Table(database = MyDatabase.class)
 public class PollVariant extends BaseModel {
-    private boolean firstPlace;
+    boolean firstPlace;
     @Column
     @PrimaryKey
     @SerializedName("id")
-    private long id;
+    long id;
     @Column
     @SerializedName("percent")
-    private int percent;
+    int percent;
     @Column
     @SerializedName("polling_question_id")
-    private long pollingQuestionId;
+    long pollingQuestionId;
     @Column
     @SerializedName("post_id")
-    private long postId;
+    long postId;
     @Column
     @SerializedName("text")
-    private String text;
+    String text;
     @Column
     @SerializedName("text_html")
-    private String textHtml;
+    String textHtml;
     @Column
     @SerializedName("votes_count")
-    private int votesCount;
+    int votesCount;
 
     public boolean isFirstPlace() {
         return firstPlace;

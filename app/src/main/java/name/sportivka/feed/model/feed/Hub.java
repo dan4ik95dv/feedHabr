@@ -49,6 +49,26 @@ public class Hub extends BaseModel {
     @Column
     @SerializedName("title")
     String title;
+    @Column
+    String category;
+    @Column
+    String flow;
+
+    public String getFlow() {
+        return flow;
+    }
+
+    public void setFlow(String flow) {
+        this.flow = flow;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
 
     public String getAbout() {
         return about;

@@ -2,8 +2,11 @@ package name.sportivka.feed.model.feed;
 
 import com.google.gson.annotations.SerializedName;
 import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.OneToMany;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import java.util.Date;
@@ -16,12 +19,13 @@ import name.sportivka.feed.model.MyDatabase;
  */
 
 @Table(database = MyDatabase.class)
-public class Post  extends BaseModel {
+public class Post extends BaseModel {
     @Column
     @PrimaryKey
     @SerializedName("id")
     long id;
     @Column
+    @ForeignKey(saveForeignKeyModel = false)
     @SerializedName("author")
     User author;
     @Column
@@ -36,9 +40,12 @@ public class Post  extends BaseModel {
     @Column
     @SerializedName("favorites_count")
     int favoritesCount;
+
     @Column
+    @ForeignKey(saveForeignKeyModel = false)
     @SerializedName("flow")
     Flow flow;
+
     @Column
     @SerializedName("is_habred")
     boolean habred;
@@ -46,17 +53,14 @@ public class Post  extends BaseModel {
     @SerializedName("has_polls")
     boolean hasPolls;
     @Column
-    @SerializedName("hubs")
-    List<Hub> hubs;
-    @Column
     @SerializedName("is_interesting")
     boolean interesting;
+
     @Column
-    @SerializedName("polls")
-    List<Poll> polls;
-    @Column
+    @ForeignKey(saveForeignKeyModel = false)
     @SerializedName("metadata")
     PostMeta postMeta;
+
     @Column
     @SerializedName("post_type")
     int postType;
@@ -107,7 +111,13 @@ public class Post  extends BaseModel {
     int votesCount;
     @Column
     @SerializedName("text_html")
-    private String textHtml;
+    String textHtml;
+
+    @SerializedName("hubs")
+    List<Hub> hubs;
+
+    @SerializedName("polls")
+    List<Poll> polls;
 
     public User getAuthor() {
         return author;
@@ -141,9 +151,6 @@ public class Post  extends BaseModel {
         return hasPolls;
     }
 
-    public List<Hub> getHubs() {
-        return hubs;
-    }
 
     public long getId() {
         return id;
@@ -151,10 +158,6 @@ public class Post  extends BaseModel {
 
     public boolean isInteresting() {
         return interesting;
-    }
-
-    public List<Poll> getPolls() {
-        return polls;
     }
 
     public PostMeta getPostMeta() {
@@ -227,5 +230,27 @@ public class Post  extends BaseModel {
 
     public int getVotesCount() {
         return votesCount;
+    }
+
+    @OneToMany(methods = {OneToMany.Method.ALL}, variableName = "hubs")
+    public List<Hub> getHubs() {
+        if (hubs == null || hubs.isEmpty()) {
+            hubs = SQLite.select()
+                    .from(Hub.class)
+                    .where(Hub_Table.id.eq(id))
+                    .queryList();
+        }
+        return hubs;
+    }
+
+    @OneToMany(methods = {OneToMany.Method.ALL}, variableName = "polls")
+    public List<Poll> getPolls() {
+        if (polls == null || polls.isEmpty()) {
+            polls = SQLite.select()
+                    .from(Poll.class)
+                    .where(Poll_Table.id.eq(id))
+                    .queryList();
+        }
+        return polls;
     }
 }

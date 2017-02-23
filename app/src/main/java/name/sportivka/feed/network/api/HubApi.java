@@ -18,11 +18,12 @@ import retrofit2.http.QueryMap;
  */
 
 public interface HubApi {
+
     @GET("hubs")
     Call<Response<List<Hub>>> getAllHubs(@Query("page") int page);
 
     @GET("hubs/categories")
-    Call<Response<List<HubCategory>>> getHubCategroies();
+    Call<Response<List<HubCategory>>> getHubCategories();
 
     @GET("hub/{hub}/{type}")
     Call<Response<List<Post>>> getHubFeed(@Path("hub") String hub, @Path("type") String type, @Query("page") int page, @QueryMap Map<String, String> map);

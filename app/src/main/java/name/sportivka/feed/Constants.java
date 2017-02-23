@@ -5,6 +5,12 @@ package name.sportivka.feed;
  */
 
 public class Constants {
+    public static final String EXCLUDE_WITHOUT_FLOW = "preview_html,first_img,text_cut,polls";
+    public static final String EXCLUDE_WITH_FLOW = "preview_html,first_img,text_cut,polls,flow";
+    public static final int FIRST_PAGE = 1;
+    public static final String INCLUDE = "text_html";
+    public static final int PER_PAGE = 30;
+
     public static final String API_URL = "https://api.habrahabr.ru/v1/";
     public static final String API_URL_DEV = "https://api.habrahabr.ru/v1/";
     public static final String API_AUTH_URL = "https://habrahabr.ru/auth/o/";
@@ -12,4 +18,5 @@ public class Constants {
     public static final int CONNECT_TIMEOUT = 5;
     public static final int READ_TIMEOUT = 10;
     public static final int WRITE_TIMEOUT = 10;
+    public static final int DELAY = 2000;
 }

@@ -1,8 +1,6 @@
 package name.sportivka.feed.di;
 
 
-import javax.inject.Singleton;
-
 import dagger.Module;
 import dagger.Provides;
 import name.sportivka.feed.di.scope.AppScope;

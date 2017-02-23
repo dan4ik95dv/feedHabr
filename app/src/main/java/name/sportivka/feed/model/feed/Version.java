@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class Version extends Simple {
     @SerializedName("version")
-    private float version;
+    float version;
 
     public float getVersion() {
         return version;

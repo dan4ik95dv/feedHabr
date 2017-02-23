@@ -2,6 +2,7 @@ package name.sportivka.feed.model.feed;
 
 import com.google.gson.annotations.SerializedName;
 import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.structure.BaseModel;
@@ -21,6 +22,7 @@ public class Comment extends BaseModel {
     @SerializedName("id")
     long id;
     @Column
+    @ForeignKey(saveForeignKeyModel = false)
     @SerializedName("author")
     User author;
     @Column
@@ -47,7 +49,7 @@ public class Comment extends BaseModel {
     @Column
     @SerializedName("time_published")
     String timePublished;
-    private Date requestTime;
+    Date requestTime;
 
     public User getAuthor() {
         return author;

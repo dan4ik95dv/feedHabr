@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class Vote extends Simple {
     @SerializedName("score")
-    private int score;
+    int score;
 
     public int getScore() {
         return score;

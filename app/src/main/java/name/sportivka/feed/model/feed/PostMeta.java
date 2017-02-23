@@ -2,8 +2,10 @@ package name.sportivka.feed.model.feed;
 
 import com.google.gson.annotations.SerializedName;
 import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.OneToMany;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import java.util.List;
@@ -35,17 +37,18 @@ public class PostMeta extends BaseModel {
     @SerializedName("preview_image_url")
     String previewImageUrl;
     @Column
-    @SerializedName("scripts")
-    List<String> scripts;
-    @Column
-    @SerializedName("styles")
-    List<String> styles;
-    @Column
     @SerializedName("title_color")
     String titleColor;
     @Column
     @SerializedName("version")
     String version;
+
+    @SerializedName("scripts")
+    List<Script> scripts;
+
+    @SerializedName("styles")
+    List<Style> styles;
+
 
     public String getEditUrl() {
         return editUrl;
@@ -67,13 +70,6 @@ public class PostMeta extends BaseModel {
         return previewImageUrl;
     }
 
-    public List<String> getScripts() {
-        return scripts;
-    }
-
-    public List<String> getStyles() {
-        return styles;
-    }
 
     public String getTitleColor() {
         return titleColor;
@@ -81,5 +77,27 @@ public class PostMeta extends BaseModel {
 
     public String getVersion() {
         return version;
+    }
+
+    @OneToMany(methods = {OneToMany.Method.ALL}, variableName = "styles")
+    public List<Style> getStyles() {
+        if (styles == null || styles.isEmpty()) {
+            styles = SQLite.select()
+                    .from(Style.class)
+                    .where(Style_Table.id.eq(id))
+                    .queryList();
+        }
+        return styles;
+    }
+
+    @OneToMany(methods = {OneToMany.Method.ALL}, variableName = "scripts")
+    public List<Script> getScripts() {
+        if (scripts == null || scripts.isEmpty()) {
+            scripts = SQLite.select()
+                    .from(Script.class)
+                    .where(Script_Table.id.eq(id))
+                    .queryList();
+        }
+        return scripts;
     }
 }

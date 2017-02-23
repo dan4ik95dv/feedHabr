@@ -23,11 +23,13 @@ public abstract class BaseActivity extends AppCompatActivity {
         finish();
     }
 
+
     @Override
     protected void onDestroy() {
         unbinder.unbind();
         super.onDestroy();
     }
+
 
     @Override
     public void setContentView(int layoutResID) {

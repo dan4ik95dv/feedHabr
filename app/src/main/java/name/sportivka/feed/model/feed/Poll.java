@@ -2,8 +2,10 @@ package name.sportivka.feed.model.feed;
 
 import com.google.gson.annotations.SerializedName;
 import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.OneToMany;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import java.util.List;
@@ -18,38 +20,39 @@ public class Poll extends BaseModel {
     @Column
     @PrimaryKey
     @SerializedName("id")
-    private long id;
+    long id;
     @Column
     @SerializedName("percent")
     int percent;
     @Column
     @SerializedName("answers_type")
-    private String answersType;
+    String answersType;
     @Column
     @SerializedName("can_vote")
-    private boolean canVote;
+    boolean canVote;
 
     @Column
     @SerializedName("pass_count")
-    private int passCount;
+    int passCount;
     @Column
     @SerializedName("post_id")
-    private long postId;
+    long postId;
     @Column
     @SerializedName("text")
-    private String text;
+    String text;
     @Column
     @SerializedName("text_html")
-    private String textHtml;
+    String textHtml;
     @Column
     @SerializedName("time_elapsed")
-    private String timeElapsed;
-    @Column
-    @SerializedName("variants")
-    private List<PollVariant> variants;
+    String timeElapsed;
+
     @Column
     @SerializedName("votes_count")
-    private int votesCount;
+    int votesCount;
+
+    @SerializedName("variants")
+    List<PollVariant> variants;
 
     public String getAnswersType() {
         return answersType;
@@ -87,7 +90,14 @@ public class Poll extends BaseModel {
         return timeElapsed;
     }
 
+    @OneToMany(methods = {OneToMany.Method.ALL}, variableName = "variants")
     public List<PollVariant> getVariants() {
+        if (variants == null || variants.isEmpty()) {
+            variants = SQLite.select()
+                    .from(PollVariant.class)
+                    .where(PollVariant_Table.id.eq(id))
+                    .queryList();
+        }
         return variants;
     }
 

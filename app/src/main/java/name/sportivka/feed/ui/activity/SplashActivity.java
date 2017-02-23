@@ -5,15 +5,14 @@ import android.os.Handler;
 import android.widget.TextView;
 
 import butterknife.BindView;
+import name.sportivka.feed.Constants;
 import name.sportivka.feed.R;
 
 public class SplashActivity extends BaseActivity {
 
+    private final Handler mHideHandler = new Handler();
     @BindView(R.id.fullscreen_content)
     TextView mContentView;
-
-    private final Handler mHideHandler = new Handler();
-
     private final Runnable mHideRunnable = new Runnable() {
         @Override
         public void run() {
@@ -34,7 +33,7 @@ public class SplashActivity extends BaseActivity {
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        delayedHide(2000);
+        delayedHide(Constants.DELAY);
     }
 
 
