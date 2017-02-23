@@ -3,6 +3,8 @@ package name.sportivka.feed;
 import android.app.Application;
 
 import com.facebook.stetho.Stetho;
+import com.raizlabs.android.dbflow.config.FlowConfig;
+import com.raizlabs.android.dbflow.config.FlowManager;
 
 import name.sportivka.feed.di.AppComponent;
 import name.sportivka.feed.di.AppModule;
@@ -17,9 +19,11 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        if (BuildConfig.DEBUG) {
+        if (BuildConfig.DEBUG)
             Stetho.initialize(Stetho.newInitializerBuilder(this).build());
-        }
+
+        FlowManager.init(new FlowConfig.Builder(this).openDatabasesOnInit(true).build());
+
         initAppComponent();
     }
 
