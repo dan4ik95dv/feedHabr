@@ -1,6 +1,5 @@
 package name.sportivka.feed.ui.activity;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -11,22 +10,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.RelativeLayout;
 
-import javax.inject.Inject;
-
 import butterknife.BindView;
 import name.sportivka.feed.App;
 import name.sportivka.feed.R;
 import name.sportivka.feed.di.AppComponent;
-import name.sportivka.feed.provider.HubProvider;
 
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-
-    @Inject
-    HubProvider hubProvider;
-    @Inject
-    SharedPreferences sharedPreferences;
-
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -94,11 +84,12 @@ public class MainActivity extends BaseActivity
             case R.id.nav_share:
                 break;
             case R.id.nav_posts:
-
                 break;
         }
 
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
 }

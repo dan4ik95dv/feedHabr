@@ -15,7 +15,7 @@ import name.sportivka.feed.model.MyDatabase;
 public class Script extends BaseModel {
     @Column
     @PrimaryKey(autoincrement = true)
-    long id;
+    long myId;
     @Column
     String script;
 

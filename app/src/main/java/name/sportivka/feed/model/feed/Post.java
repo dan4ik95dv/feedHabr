@@ -3,6 +3,8 @@ package name.sportivka.feed.model.feed;
 import com.google.gson.annotations.SerializedName;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.ForeignKeyAction;
+import com.raizlabs.android.dbflow.annotation.ForeignKeyReference;
 import com.raizlabs.android.dbflow.annotation.OneToMany;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
@@ -23,9 +25,9 @@ public class Post extends BaseModel {
     @Column
     @PrimaryKey
     @SerializedName("id")
-    long id;
+    long myId;
     @Column
-    @ForeignKey(saveForeignKeyModel = false)
+    @ForeignKey(stubbedRelationship = true, onDelete = ForeignKeyAction.CASCADE, onUpdate = ForeignKeyAction.CASCADE)
     @SerializedName("author")
     User author;
     @Column
@@ -42,7 +44,7 @@ public class Post extends BaseModel {
     int favoritesCount;
 
     @Column
-    @ForeignKey(saveForeignKeyModel = false)
+    @ForeignKey(saveForeignKeyModel = false, references = @ForeignKeyReference(columnName = "ref_flow_id", foreignKeyColumnName = "flow_id"))
     @SerializedName("flow")
     Flow flow;
 
@@ -57,7 +59,8 @@ public class Post extends BaseModel {
     boolean interesting;
 
     @Column
-    @ForeignKey(saveForeignKeyModel = false)
+    @ForeignKey
+    @PrimaryKey
     @SerializedName("metadata")
     PostMeta postMeta;
 
@@ -153,7 +156,7 @@ public class Post extends BaseModel {
 
 
     public long getId() {
-        return id;
+        return myId;
     }
 
     public boolean isInteresting() {
@@ -237,7 +240,7 @@ public class Post extends BaseModel {
         if (hubs == null || hubs.isEmpty()) {
             hubs = SQLite.select()
                     .from(Hub.class)
-                    .where(Hub_Table.id.eq(id))
+                    .where(Hub_Table.myId.eq(myId))
                     .queryList();
         }
         return hubs;
@@ -248,7 +251,7 @@ public class Post extends BaseModel {
         if (polls == null || polls.isEmpty()) {
             polls = SQLite.select()
                     .from(Poll.class)
-                    .where(Poll_Table.id.eq(id))
+                    .where(Poll_Table.myId.eq(myId))
                     .queryList();
         }
         return polls;

@@ -3,6 +3,7 @@ package name.sportivka.feed.model.feed;
 import com.google.gson.annotations.SerializedName;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.ForeignKeyAction;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.structure.BaseModel;
@@ -17,19 +18,19 @@ public class User extends BaseModel {
     @PrimaryKey
     @Column
     @SerializedName("id")
-    long id;
+    long myId;
     @Column
     @SerializedName("avatar")
     String avatar;
     @Column
-    @ForeignKey(saveForeignKeyModel = false)
+    @ForeignKey(stubbedRelationship = true, onDelete = ForeignKeyAction.CASCADE, onUpdate = ForeignKeyAction.CASCADE)
     @SerializedName("counters")
     Counters counters;
     @Column
     @SerializedName("fullname")
     String fullName;
     @Column
-    @ForeignKey(saveForeignKeyModel = false)
+    @ForeignKey(stubbedRelationship = true, onDelete = ForeignKeyAction.CASCADE, onUpdate = ForeignKeyAction.CASCADE)
     @SerializedName("geo")
     Geo geo;
     @Column
@@ -74,7 +75,7 @@ public class User extends BaseModel {
     }
 
     public long getId() {
-        return id;
+        return myId;
     }
 
     public String getLogin() {

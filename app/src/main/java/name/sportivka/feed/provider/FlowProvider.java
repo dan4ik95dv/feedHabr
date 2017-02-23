@@ -1,8 +1,12 @@
 package name.sportivka.feed.provider;
 
+import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.list.FlowQueryList;
 import com.raizlabs.android.dbflow.sql.language.From;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
+import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
+import com.raizlabs.android.dbflow.structure.database.transaction.ProcessModelTransaction;
+import com.raizlabs.android.dbflow.structure.database.transaction.Transaction;
 
 import java.util.List;
 
@@ -10,11 +14,11 @@ import javax.inject.Inject;
 
 import name.sportivka.feed.Constants;
 import name.sportivka.feed.di.scope.AppScope;
+import name.sportivka.feed.model.MyDatabase;
 import name.sportivka.feed.model.Response;
 import name.sportivka.feed.model.feed.Flow;
 import name.sportivka.feed.model.feed.Flow_Table;
 import name.sportivka.feed.model.feed.Hub;
-import name.sportivka.feed.model.feed.Hub_Table;
 import name.sportivka.feed.model.feed.Post;
 import name.sportivka.feed.network.ConnectionDetector;
 import name.sportivka.feed.network.api.FlowApi;
@@ -129,7 +133,7 @@ public class FlowProvider {
         int offset = (page - 1) * Constants.PER_PAGE;
         From query = SQLite.select().from(Hub.class);
         if (flow != null)
-            query.where(Hub_Table.flow.eq(flow));
+            query.where(Flow_Table.name.eq(flow));
         FlowQueryList<Hub> result = query.offset(offset).limit(Constants.PER_PAGE).flowQueryList();
         int nextPage = result.getCount() == Constants.PER_PAGE ? page + 1 : 0;
         asyncData.onSuccess(result, nextPage, true);
@@ -147,28 +151,79 @@ public class FlowProvider {
     }
 
     void putFlowsToCache(final List<Flow> flows) {
-        for (Flow flow : flows) {
-            flow.save();
-        }
+        FlowManager.getDatabase(MyDatabase.class)
+                .beginTransactionAsync(new ProcessModelTransaction.Builder<>(
+                        new ProcessModelTransaction.ProcessModel<Flow>() {
+                            @Override
+                            public void processModel(Flow flow, DatabaseWrapper wrapper) {
+                                flow.save();
+                            }
+                        }).addAll(flows).build())
+                .error(new Transaction.Error() {
+                    @Override
+                    public void onError(Transaction transaction, Throwable error) {
+
+                    }
+                })
+                .success(new Transaction.Success() {
+                    @Override
+                    public void onSuccess(Transaction transaction) {
+
+                    }
+                }).build().execute();
+
     }
 
     void putHubsToCache(final List<Hub> hubs) {
         putHubsToCache(hubs, null);
     }
 
-    void putHubsToCache(final List<Hub> hubs, String flow) {
-        for (Hub hub : hubs) {
-            if (flow != null)
-                hub.setFlow(flow);
-            hub.save();
-        }
+    void putHubsToCache(final List<Hub> hubs, final String flow) {
+        FlowManager.getDatabase(MyDatabase.class)
+                .beginTransactionAsync(new ProcessModelTransaction.Builder<>(
+                        new ProcessModelTransaction.ProcessModel<Hub>() {
+                            @Override
+                            public void processModel(Hub hub, DatabaseWrapper wrapper) {
+                                hub.save();
+                            }
+                        }).addAll(hubs).build())
+                .error(new Transaction.Error() {
+                    @Override
+                    public void onError(Transaction transaction, Throwable error) {
+
+                    }
+                })
+                .success(new Transaction.Success() {
+                    @Override
+                    public void onSuccess(Transaction transaction) {
+
+                    }
+                }).build().execute();
+
     }
 
 
     void putPostsToCache(final List<Post> posts) {
-        for (Post post : posts) {
-            post.save();
-        }
+        FlowManager.getDatabase(MyDatabase.class)
+                .beginTransactionAsync(new ProcessModelTransaction.Builder<>(
+                        new ProcessModelTransaction.ProcessModel<Post>() {
+                            @Override
+                            public void processModel(Post post, DatabaseWrapper wrapper) {
+                                post.save();
+                            }
+                        }).addAll(posts).build())
+                .error(new Transaction.Error() {
+                    @Override
+                    public void onError(Transaction transaction, Throwable error) {
+
+                    }
+                })
+                .success(new Transaction.Success() {
+                    @Override
+                    public void onSuccess(Transaction transaction) {
+
+                    }
+                }).build().execute();
     }
 
     public interface AsyncData<T> {

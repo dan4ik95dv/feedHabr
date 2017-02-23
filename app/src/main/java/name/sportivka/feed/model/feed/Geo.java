@@ -16,7 +16,7 @@ import name.sportivka.feed.model.MyDatabase;
 public class Geo extends BaseModel {
     @Column
     @PrimaryKey(autoincrement = true)
-    long id;
+    long myId;
     @Column
     @SerializedName("city")
     String city;

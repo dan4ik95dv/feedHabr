@@ -1,8 +1,12 @@
 package name.sportivka.feed.provider;
 
+import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.list.FlowQueryList;
 import com.raizlabs.android.dbflow.sql.language.From;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
+import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
+import com.raizlabs.android.dbflow.structure.database.transaction.ProcessModelTransaction;
+import com.raizlabs.android.dbflow.structure.database.transaction.Transaction;
 
 import java.util.List;
 
@@ -10,6 +14,7 @@ import javax.inject.Inject;
 
 import name.sportivka.feed.Constants;
 import name.sportivka.feed.di.scope.AppScope;
+import name.sportivka.feed.model.MyDatabase;
 import name.sportivka.feed.model.Response;
 import name.sportivka.feed.model.feed.Hub;
 import name.sportivka.feed.model.feed.HubCategory;
@@ -136,21 +141,56 @@ public class HubProvider {
     }
 
     void putHubCategoriesToCache(final List<HubCategory> hubCategories) {
-        for (HubCategory hubCategory : hubCategories) {
-            hubCategory.save();
-        }
+        FlowManager.getDatabase(MyDatabase.class)
+                .beginTransactionAsync(new ProcessModelTransaction.Builder<>(
+                        new ProcessModelTransaction.ProcessModel<HubCategory>() {
+                            @Override
+                            public void processModel(HubCategory hubCategory, DatabaseWrapper wrapper) {
+                                hubCategory.save();
+                            }
+                        }).addAll(hubCategories).build())
+                .error(new Transaction.Error() {
+                    @Override
+                    public void onError(Transaction transaction, Throwable error) {
+
+                    }
+                })
+                .success(new Transaction.Success() {
+                    @Override
+                    public void onSuccess(Transaction transaction) {
+
+                    }
+                }).build().execute();
     }
 
     void putHubsToCache(final List<Hub> hubs) {
         putHubsToCache(hubs, null);
     }
 
-    void putHubsToCache(final List<Hub> hubs, String category) {
-        for (Hub hub : hubs) {
-            if (category != null)
-                hub.setCategory(category);
-            hub.save();
-        }
+    void putHubsToCache(final List<Hub> hubs, final String category) {
+        FlowManager.getDatabase(MyDatabase.class)
+                .beginTransactionAsync(new ProcessModelTransaction.Builder<>(
+                        new ProcessModelTransaction.ProcessModel<Hub>() {
+                            @Override
+                            public void processModel(Hub hub, DatabaseWrapper wrapper) {
+                                if (category != null)
+                                    hub.setCategory(category);
+                                hub.save();
+                            }
+                        }).addAll(hubs).build())
+                .error(new Transaction.Error() {
+                    @Override
+                    public void onError(Transaction transaction, Throwable error) {
+
+                    }
+                })
+                .success(new Transaction.Success() {
+                    @Override
+                    public void onSuccess(Transaction transaction) {
+
+                    }
+                }).build().execute();
+
     }
 
 

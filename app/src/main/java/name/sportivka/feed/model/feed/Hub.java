@@ -2,6 +2,8 @@ package name.sportivka.feed.model.feed;
 
 import com.google.gson.annotations.SerializedName;
 import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.ForeignKeyReference;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.structure.BaseModel;
@@ -17,7 +19,7 @@ public class Hub extends BaseModel {
     @Column
     @PrimaryKey
     @SerializedName("id")
-    long id;
+    long myId;
     @Column
     @SerializedName("about")
     String about;
@@ -52,13 +54,15 @@ public class Hub extends BaseModel {
     @Column
     String category;
     @Column
-    String flow;
+    @ForeignKey(saveForeignKeyModel = false, references = @ForeignKeyReference(columnName = "ref_flow_id", foreignKeyColumnName = "flow_id"))
+    @SerializedName("flow")
+    Flow flow;
 
-    public String getFlow() {
+    public Flow getFlow() {
         return flow;
     }
 
-    public void setFlow(String flow) {
+    public void setFlow(Flow flow) {
         this.flow = flow;
     }
 
@@ -91,7 +95,7 @@ public class Hub extends BaseModel {
     }
 
     public long getId() {
-        return id;
+        return myId;
     }
 
     public boolean isMembership() {

@@ -20,7 +20,7 @@ public class Poll extends BaseModel {
     @Column
     @PrimaryKey
     @SerializedName("id")
-    long id;
+    long myId;
     @Column
     @SerializedName("percent")
     int percent;
@@ -63,7 +63,7 @@ public class Poll extends BaseModel {
     }
 
     public long getId() {
-        return id;
+        return myId;
     }
 
     public int getPassCount() {
@@ -95,7 +95,7 @@ public class Poll extends BaseModel {
         if (variants == null || variants.isEmpty()) {
             variants = SQLite.select()
                     .from(PollVariant.class)
-                    .where(PollVariant_Table.id.eq(id))
+                    .where(PollVariant_Table.myId.eq(myId))
                     .queryList();
         }
         return variants;

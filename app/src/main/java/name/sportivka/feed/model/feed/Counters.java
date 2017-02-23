@@ -16,7 +16,7 @@ import name.sportivka.feed.model.MyDatabase;
 public class Counters extends BaseModel {
     @Column
     @PrimaryKey(autoincrement = true)
-    long id;
+    long myId;
     @Column
     @SerializedName("comments")
     int comments;

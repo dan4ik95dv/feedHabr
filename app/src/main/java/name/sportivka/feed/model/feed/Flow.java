@@ -14,9 +14,10 @@ import name.sportivka.feed.model.MyDatabase;
 
 @Table(database = MyDatabase.class)
 public class Flow extends BaseModel {
-    @Column
-    @PrimaryKey(autoincrement = true)
-    long id;
+    @Column(name = "flow_id")
+    @PrimaryKey
+    @SerializedName("id")
+    long flow_id;
     @Column
     @SerializedName("alias")
     String alias;

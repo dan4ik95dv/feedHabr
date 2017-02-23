@@ -19,4 +19,27 @@ public class Constants {
     public static final int READ_TIMEOUT = 10;
     public static final int WRITE_TIMEOUT = 10;
     public static final int DELAY = 2000;
+
+    public static final String[] FILTER_TYPE = new String[]{"daily",
+            "weekly",
+            "monthly",
+            "alltime"};
+
+
+    public enum SearchType {
+        DATE("date"),
+        RATING("rating"),
+        RELEVANCE("relevance");
+
+        String name;
+
+        private SearchType(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return this.name;
+        }
+    }
+
 }

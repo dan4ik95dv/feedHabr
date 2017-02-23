@@ -3,6 +3,7 @@ package name.sportivka.feed.model.feed;
 import com.google.gson.annotations.SerializedName;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.ForeignKeyAction;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.structure.BaseModel;
@@ -17,12 +18,13 @@ import name.sportivka.feed.model.MyDatabase;
 
 @Table(database = MyDatabase.class)
 public class Comment extends BaseModel {
-    @Column
+
     @PrimaryKey
     @SerializedName("id")
-    long id;
+    long myId;
+
     @Column
-    @ForeignKey(saveForeignKeyModel = false)
+    @ForeignKey(stubbedRelationship = true, onDelete = ForeignKeyAction.CASCADE, onUpdate = ForeignKeyAction.CASCADE)
     @SerializedName("author")
     User author;
     @Column
@@ -64,7 +66,7 @@ public class Comment extends BaseModel {
     }
 
     public long getId() {
-        return id;
+        return myId;
     }
 
     public int getLevel() {

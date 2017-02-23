@@ -17,7 +17,7 @@ public class PollVariant extends BaseModel {
     @Column
     @PrimaryKey
     @SerializedName("id")
-    long id;
+    long myId;
     @Column
     @SerializedName("percent")
     int percent;
@@ -42,7 +42,7 @@ public class PollVariant extends BaseModel {
     }
 
     public long getId() {
-        return id;
+        return myId;
     }
 
     public int getPercent() {
