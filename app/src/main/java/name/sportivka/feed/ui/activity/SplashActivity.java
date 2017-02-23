@@ -1,44 +1,39 @@
 package name.sportivka.feed.ui.activity;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.widget.TextView;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
-import name.sportivka.feed.Constants;
 import name.sportivka.feed.R;
+import name.sportivka.feed.di.DaggerSplashComponent;
+import name.sportivka.feed.di.SplashModule;
+import name.sportivka.feed.mvp.presenter.SplashPresenter;
+import name.sportivka.feed.mvp.view.SplashMvpView;
 
-public class SplashActivity extends BaseActivity {
+public class SplashActivity extends BaseActivity implements SplashMvpView {
+    @Inject
+    SplashPresenter presenter;
 
-    private final Handler mHideHandler = new Handler();
     @BindView(R.id.fullscreen_content)
     TextView mContentView;
-    private final Runnable mHideRunnable = new Runnable() {
-        @Override
-        public void run() {
-            showSystemBar(mContentView);
-            startMainAcitity();
-        }
-    };
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        DaggerSplashComponent.builder().splashModule(new SplashModule(this)).build().inject(this);
         setContentView(R.layout.activity_splash);
-        hideSystemBar(mContentView);
+        presenter.init();
     }
-
 
     @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        delayedHide(Constants.DELAY);
+    public void showSysBar() {
+        showSystemBar(mContentView);
     }
 
-
-    private void delayedHide(int delayMillis) {
-        mHideHandler.removeCallbacks(mHideRunnable);
-        mHideHandler.postDelayed(mHideRunnable, delayMillis);
+    @Override
+    public void hideSysBar() {
+        hideSystemBar(mContentView);
     }
 }
