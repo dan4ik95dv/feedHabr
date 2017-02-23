@@ -1,3 +1,13 @@
 <resources>
-    <string name="app_name">feed</string>
+    <string name="app_name">Feed Habr</string>
+    <string name="title_activity_main">Main</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <string name="title_activity_splash">SplashActivity</string>
+    <string name="hello">Feed Habr</string>
+    <string name="error_unknown">Unknown Error!</string>
 </resources>
