@@ -45,6 +45,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.BaseViewHold
     public void setPostList(FlowCursorList<Post> postCacheList) {
         this.cacheMode = true;
         this.mPostCacheList = postCacheList;
+        notifyDataSetChanged();
     }
 
     public void setPostList(List<Post> postList) {
@@ -55,6 +56,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.BaseViewHold
         }
         notifyDataSetChanged();
     }
+
     public void addPostList(List<Post> postList) {
         this.cacheMode = false;
         for (Post post : postList) {

@@ -3,5 +3,5 @@
     style="?android:attr/spinnerDropDownItemStyle"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
-    android:background="@color/background_material_light"
-    android:textColor="@color/primary_text_default_material_light" />
+    android:background="#fffafafa"
+    android:textColor="#de000000" />

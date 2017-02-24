@@ -25,7 +25,7 @@
 
     <string-array name="post_filter">
         <item>Лучшие</item>
-        <item>Интересеные</item>
+        <item>Интересные</item>
         <item>Все подряд</item>
     </string-array>
 

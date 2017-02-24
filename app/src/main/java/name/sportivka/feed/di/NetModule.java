@@ -2,7 +2,6 @@ package name.sportivka.feed.di;
 
 import android.content.Context;
 
-import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.TypeAdapter;
@@ -145,7 +144,7 @@ public class NetModule {
         OkHttpClient.Builder builder = new OkHttpClient().newBuilder()
                 .addInterceptor(mainIntercepter)
                 .retryOnConnectionFailure(true)
-                .addNetworkInterceptor(new StethoInterceptor())
+//                .addNetworkInterceptor(new StethoInterceptor())
                 .sslSocketFactory(sslSocketFactory, x509TrustManager)
                 .connectTimeout(Constants.CONNECT_TIMEOUT, TimeUnit.SECONDS)
                 .readTimeout(Constants.READ_TIMEOUT, TimeUnit.SECONDS)

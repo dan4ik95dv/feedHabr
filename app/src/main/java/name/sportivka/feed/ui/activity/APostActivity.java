@@ -49,8 +49,18 @@ public class APostActivity extends BaseActivity implements APostMvpView {
                 R.color.colorPrimaryDark);
     }
 
+    protected void configureLayerType(WebView webView) {
+        webView.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null);
+        webView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
+        webView.getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
+    }
+
     public void initWebView() {
-        this.postWebview.setPadding(0, 0, 0, 0);
+        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            configureLayerType(this.postWebview);
+        }
+
+        this.postWebview.setPadding(8, 8, 8, 8);
         this.postWebview.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
         this.postWebview.setBackgroundColor(0);
         this.postWebview.getSettings().setBuiltInZoomControls(true);

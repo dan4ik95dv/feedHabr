@@ -13,10 +13,8 @@ import name.sportivka.feed.mvp.Presenter;
 import name.sportivka.feed.mvp.view.APostMvpView;
 import name.sportivka.feed.provider.PostProvider;
 import name.sportivka.feed.ui.activity.BaseActivity;
-import name.sportivka.feed.ui.adapter.HubsAdapter;
 
 import static name.sportivka.feed.Constants.POST_ID;
-import static name.sportivka.feed.Constants.TITLE_POST;
 
 /**
  * Created by daniil on 23.02.17.
@@ -24,19 +22,16 @@ import static name.sportivka.feed.Constants.TITLE_POST;
 
 public class APostPresenter implements Presenter<APostMvpView> {
 
-
     @Inject
     Bus bus;
     @Inject
     PostProvider postProvider;
 
-    private HubsAdapter hubsAdapter;
     private SwipeRefreshLayout.OnRefreshListener refreshListener;
     private APostMvpView aPostMvpView;
     private BaseActivity activity;
     private Context context;
     private Long postId;
-    private String title;
 
     public APostPresenter(Context context) {
         inject(context);
@@ -69,7 +64,6 @@ public class APostPresenter implements Presenter<APostMvpView> {
     public void init() {
         if (activity.getIntent() != null) {
             postId = activity.getIntent().getLongExtra(POST_ID, -1);
-            title = activity.getIntent().getStringExtra(TITLE_POST);
             if (postId != -1) {
                 refreshListener = new SwipeRefreshLayout.OnRefreshListener() {
                     @Override

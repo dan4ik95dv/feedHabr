@@ -28,6 +28,10 @@ import name.sportivka.feed.ui.activity.APostActivity;
 import name.sportivka.feed.ui.adapter.PostsAdapter;
 import name.sportivka.feed.ui.widget.ItemClickSupport;
 
+import static name.sportivka.feed.Constants.ALL_TYPE;
+import static name.sportivka.feed.Constants.BEST_TYPE;
+import static name.sportivka.feed.Constants.INTERESTING_TYPE;
+
 /**
  * Created by daniil on 23.02.17.
  */
@@ -149,13 +153,13 @@ public class FPostsPresenter implements Presenter<FPostsMvpView> {
             postProvider.getHubFeed(currentPage, hub.getAlias(), Constants.TYPES[type], posts);
         } else {
             switch (type) {
-                case 0:
+                case BEST_TYPE:
                     postProvider.getPubBest("alltime", currentPage, posts);
                     break;
-                case 1:
+                case INTERESTING_TYPE:
                     postProvider.getPubInteresting(currentPage, posts);
                     break;
-                case 2:
+                case ALL_TYPE:
                     postProvider.getPubAll(currentPage, posts);
                     break;
             }
