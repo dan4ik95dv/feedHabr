@@ -43,6 +43,7 @@ public class FPostsPresenter implements Presenter<FPostsMvpView> {
     PostProvider postProvider;
 
     private PostsAdapter postsAdapter;
+
     private SwipeRefreshLayout.OnRefreshListener refreshListener;
     private ItemClickSupport.OnItemClickListener itemClickListener;
     private FPostsMvpView fPostsMvpView;
@@ -82,7 +83,7 @@ public class FPostsPresenter implements Presenter<FPostsMvpView> {
         refreshListener = new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                loadData(currentType, hub, true);
+                loadData(currentType, hub, true, false);
             }
         };
         itemClickListener = new ItemClickSupport.OnItemClickListener() {
@@ -106,11 +107,17 @@ public class FPostsPresenter implements Presenter<FPostsMvpView> {
         loadData(event.getType(), event.getHub());
     }
 
-    public void loadData(int type, Hub hub) {
-        loadData(type, hub, false);
+    public void loadData(int page) {
+        currentPage = page;
+        loadData(currentType, hub, false, true);
     }
 
-    public void loadData(int type, Hub hub, boolean update) {
+    public void loadData(int type, Hub hub) {
+        loadData(type, hub, false, false);
+    }
+
+    public void loadData(int type, Hub hub, boolean update, final boolean append) {
+        postProvider.setCacheEnable(!append);
         if (fPostsMvpView == null) return;
         if (update) currentPage = 1;
         fPostsMvpView.showProgress();
@@ -119,7 +126,11 @@ public class FPostsPresenter implements Presenter<FPostsMvpView> {
             public void onSuccess(List<Post> data, int nextPage) {
                 if (fPostsMvpView == null) return;
                 fPostsMvpView.hideProgress();
-                postsAdapter.setPostList(data);
+                if (append)
+                    postsAdapter.addPostList(data);
+                else
+                    postsAdapter.setPostList(data);
+
                 currentPage = nextPage;
             }
 

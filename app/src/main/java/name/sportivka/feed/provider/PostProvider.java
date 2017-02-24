@@ -35,14 +35,20 @@ public class PostProvider {
 
     ConnectionDetector connectionDetector;
 
+    boolean cacheEnable = true;
+
     @Inject
     public PostProvider(PostApi postApi, ConnectionDetector connectionDetector) {
         this.connectionDetector = connectionDetector;
         this.postApi = postApi;
     }
 
+    public void setCacheEnable(boolean cacheEnable) {
+        this.cacheEnable = cacheEnable;
+    }
+
     public void getPost(long postId, boolean getArticle, AsyncData<Post, Post> asyncData) {
-        getCachePost(postId, getArticle, asyncData);
+        if (cacheEnable)  getCachePost(postId, getArticle, asyncData);
 
         if (connectionDetector.isConnectingToInternet())
             getNetworkPost(postId, getArticle, asyncData);
@@ -51,7 +57,7 @@ public class PostProvider {
     }
 
     public void getPubAll(int page, AsyncData<List<Post>, FlowCursorList<Post>> asyncData) {
-        getCachePubAll(page, asyncData);
+        if (cacheEnable)  getCachePubAll(page, asyncData);
 
         if (connectionDetector.isConnectingToInternet())
             getNetworkPubAll(page, asyncData);
@@ -61,7 +67,7 @@ public class PostProvider {
 
 
     public void getPubBest(String type, int page, AsyncData<List<Post>, FlowCursorList<Post>> asyncData) {
-        getCachePubBest(type, page, asyncData);
+        if (cacheEnable)  getCachePubBest(type, page, asyncData);
 
         if (connectionDetector.isConnectingToInternet())
             getNetworkPubBest(type, page, asyncData);
@@ -70,7 +76,7 @@ public class PostProvider {
     }
 
     public void getPubInteresting(int page, AsyncData<List<Post>, FlowCursorList<Post>> asyncData) {
-        getCachePubInteresting(page, asyncData);
+        if (cacheEnable)  getCachePubInteresting(page, asyncData);
 
         if (connectionDetector.isConnectingToInternet())
             getNetworkPubInteresting(page, asyncData);
@@ -79,7 +85,7 @@ public class PostProvider {
     }
 
     public void searchPosts(String search, int page, String sort, boolean getArticle, AsyncData<List<Post>, FlowCursorList<Post>> pasyncDatasts) {
-        getCacheSearchPosts(search, page, sort, getArticle, pasyncDatasts);
+        if (cacheEnable)  getCacheSearchPosts(search, page, sort, getArticle, pasyncDatasts);
 
         if (connectionDetector.isConnectingToInternet())
             getNetworkSearchPosts(search, page, sort, getArticle, pasyncDatasts);
@@ -88,7 +94,8 @@ public class PostProvider {
     }
 
     public void getHubFeed(int page, String hub, String type, PostProvider.AsyncData<List<Post>, FlowCursorList<Post>> asyncData) {
-        getCacheHubFeed(page, hub, type, asyncData);
+        if (cacheEnable)  getCacheHubFeed(page, hub, type, asyncData);
+
         if (connectionDetector.isConnectingToInternet())
             getNetworkHubFeed(page, hub, type, asyncData);
         else

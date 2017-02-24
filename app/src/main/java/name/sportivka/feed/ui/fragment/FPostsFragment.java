@@ -24,6 +24,7 @@ import name.sportivka.feed.model.feed.Hub;
 import name.sportivka.feed.mvp.presenter.FPostsPresenter;
 import name.sportivka.feed.mvp.view.FPostsMvpView;
 import name.sportivka.feed.ui.widget.DividerItemDecoration;
+import name.sportivka.feed.ui.widget.EndlessRecyclerViewScrollListener;
 import name.sportivka.feed.ui.widget.ItemClickSupport;
 
 
@@ -44,6 +45,7 @@ public class FPostsFragment extends Fragment implements FPostsMvpView {
     @BindView(R.id.loading_progress)
     ProgressBar loadingProgress;
     private int type;
+    private EndlessRecyclerViewScrollListener scrollListener;
 
     public FPostsFragment() {
         // Required empty public constructor
@@ -72,19 +74,30 @@ public class FPostsFragment extends Fragment implements FPostsMvpView {
     }
 
     private void initView() {
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         contentMainRecyclerView.setHasFixedSize(true);
-        contentMainRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        contentMainRecyclerView.setLayoutManager(linearLayoutManager);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(contentMainRecyclerView.getContext(), R.drawable.divider);
         contentMainRecyclerView.addItemDecoration(dividerItemDecoration);
         contentMainRecyclerView.setAdapter(presenter.getPostsAdapter());
         ItemClickSupport.addTo(contentMainRecyclerView)
                 .setOnItemClickListener(presenter.getItemClickListener());
 
+
+        scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                presenter.loadData(page);
+            }
+        };
+        contentMainRecyclerView.addOnScrollListener(scrollListener);
         swipeRefreshLayout.setOnRefreshListener(presenter.getRefreshListener());
         swipeRefreshLayout.setColorSchemeResources(
                 R.color.colorPrimaryDark,
                 R.color.colorPrimaryDark,
                 R.color.colorPrimaryDark);
+
     }
 
 

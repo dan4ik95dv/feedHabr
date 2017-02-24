@@ -55,7 +55,13 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.BaseViewHold
         }
         notifyDataSetChanged();
     }
-
+    public void addPostList(List<Post> postList) {
+        this.cacheMode = false;
+        for (Post post : postList) {
+            mPostList.add(post);
+        }
+        notifyDataSetChanged();
+    }
 
     @Override
     public int getItemViewType(int position) {
