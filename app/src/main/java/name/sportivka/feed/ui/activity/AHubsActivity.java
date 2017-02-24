@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import javax.inject.Inject;
 
@@ -22,6 +24,8 @@ public class AHubsActivity extends BaseActivity implements AHubsMvpView {
 
     @BindView(R.id.content_main_recycler_view)
     RecyclerView contentMainRecyclerView;
+    @BindView(R.id.loading_progress)
+    ProgressBar loadingProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,17 +72,22 @@ public class AHubsActivity extends BaseActivity implements AHubsMvpView {
 
     @Override
     public void hideProgress() {
-
+        loadingProgress.setVisibility(View.GONE);
     }
 
     @Override
     public void showProgress() {
-
+        loadingProgress.setVisibility(View.GONE);
     }
 
     @Override
     public void changeTitle(String categoryTitle) {
         setTitle(categoryTitle);
         getSupportActionBar().setTitle(categoryTitle);
+    }
+
+    @Override
+    public void showError() {
+        loadingProgress.setVisibility(View.GONE);
     }
 }

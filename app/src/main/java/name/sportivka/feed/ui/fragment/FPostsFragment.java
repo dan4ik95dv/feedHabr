@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import org.parceler.Parcels;
 
@@ -40,6 +41,8 @@ public class FPostsFragment extends Fragment implements FPostsMvpView {
     @Inject
     FPostsPresenter presenter;
     Hub hub;
+    @BindView(R.id.loading_progress)
+    ProgressBar loadingProgress;
     private int type;
 
     public FPostsFragment() {
@@ -94,16 +97,18 @@ public class FPostsFragment extends Fragment implements FPostsMvpView {
 
     @Override
     public void hideProgress() {
+        loadingProgress.setVisibility(View.GONE);
         swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
     public void showError() {
+        loadingProgress.setVisibility(View.GONE);
         swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
     public void showProgress() {
-        swipeRefreshLayout.setRefreshing(true);
+        loadingProgress.setVisibility(View.VISIBLE);
     }
 }

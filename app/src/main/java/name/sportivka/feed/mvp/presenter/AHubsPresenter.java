@@ -125,7 +125,7 @@ public class AHubsPresenter implements Presenter<AHubsMvpView> {
             @Override
             public void onError() {
                 if (aHubsMvpView == null) return;
-                aHubsMvpView.hideProgress();
+                aHubsMvpView.showError();
             }
         };
 

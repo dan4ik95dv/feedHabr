@@ -1,6 +1,7 @@
 package name.sportivka.feed.ui.activity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -62,6 +63,11 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
+    public void goToUrl(String url) {
+        Uri uriUrl = Uri.parse(url);
+        Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
+        startActivity(launchBrowser);
+    }
 
     public void showFragment(Class fragmentClass, Bundle args) {
         Fragment fragment = null;
@@ -72,7 +78,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).addToBackStack(null).commit();
     }
 
 }

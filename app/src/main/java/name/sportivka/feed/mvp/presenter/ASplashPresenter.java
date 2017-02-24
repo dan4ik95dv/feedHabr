@@ -21,15 +21,15 @@ public class ASplashPresenter implements Presenter<ASplashMvpView> {
     @Inject
     Bus bus;
 
-    private ASplashMvpView ASplashMvpView;
+    private ASplashMvpView aSplashMvpView;
     private Context context;
     private BaseActivity activity;
     private Handler mHideHandler = new Handler();
     private Runnable mHideRunnable = new Runnable() {
         @Override
         public void run() {
-            if (ASplashMvpView != null)
-                ASplashMvpView.hideSysBar();
+            if (aSplashMvpView != null)
+                aSplashMvpView.showSysBar();
             activity.startMainAcitity();
         }
     };
@@ -43,13 +43,13 @@ public class ASplashPresenter implements Presenter<ASplashMvpView> {
     @Override
     public void attachView(ASplashMvpView view) {
         this.bus.register(this);
-        this.ASplashMvpView = view;
+        this.aSplashMvpView = view;
     }
 
     @Override
     public void detachView() {
         this.bus.unregister(this);
-        this.ASplashMvpView = null;
+        this.aSplashMvpView = null;
     }
 
 
@@ -58,6 +58,7 @@ public class ASplashPresenter implements Presenter<ASplashMvpView> {
     }
 
     public void init() {
+        aSplashMvpView.hideSysBar();
         mHideHandler.removeCallbacks(mHideRunnable);
         mHideHandler.postDelayed(mHideRunnable, Constants.DELAY);
     }

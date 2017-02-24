@@ -15,6 +15,7 @@ import android.widget.Spinner;
 import javax.inject.Inject;
 
 import butterknife.BindView;
+import name.sportivka.feed.Constants;
 import name.sportivka.feed.R;
 import name.sportivka.feed.di.activity.AMainModule;
 import name.sportivka.feed.di.activity.DaggerAMainComponent;
@@ -22,6 +23,8 @@ import name.sportivka.feed.mvp.presenter.AMainPresenter;
 import name.sportivka.feed.mvp.view.AMainMvpView;
 import name.sportivka.feed.ui.fragment.FHubCategoriesFragment;
 import name.sportivka.feed.ui.fragment.FPostsFragment;
+
+import static name.sportivka.feed.Constants.GITHUB_URL;
 
 public class AMainActivity extends BaseActivity
         implements AMainMvpView, NavigationView.OnNavigationItemSelectedListener {
@@ -57,13 +60,13 @@ public class AMainActivity extends BaseActivity
         getSupportActionBar().setTitle("");
         showSpinner(true);
         Bundle bundle = new Bundle();
-        bundle.putInt(FPostsFragment.ARG_TYPE, 0);
+        bundle.putInt(FPostsFragment.ARG_TYPE, Constants.ALL_TYPE);
         showFragment(FPostsFragment.class, bundle);
     }
 
     private void showHubsCategories() {
-        setTitle("Потоки хабов");
-        getSupportActionBar().setTitle("Потоки хабов");
+        setTitle(R.string.flows_hub);
+        getSupportActionBar().setTitle(R.string.flows_hub);
         showFragment(FHubCategoriesFragment.class, null);
         showSpinner(false);
     }
@@ -123,6 +126,7 @@ public class AMainActivity extends BaseActivity
                 showPosts();
                 break;
             case R.id.nav_share:
+                goToUrl(GITHUB_URL);
                 break;
         }
 

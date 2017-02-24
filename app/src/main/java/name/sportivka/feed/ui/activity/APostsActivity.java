@@ -82,7 +82,7 @@ public class APostsActivity extends BaseActivity implements APostsMvpView {
     @Override
     public void showPosts(int type, Hub hub) {
         Bundle bundle = new Bundle();
-        bundle.putInt(FPostsFragment.ARG_TYPE, 0);
+        bundle.putInt(FPostsFragment.ARG_TYPE, type);
         if (hub != null) {
             bundle.putParcelable(FPostsFragment.ARG_HUB, Parcels.wrap(hub));
         }

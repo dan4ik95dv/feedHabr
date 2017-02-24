@@ -12,4 +12,6 @@ public interface AHubsMvpView extends MvpView {
     void showProgress();
 
     void changeTitle(String categoryTitle);
+
+    void showError();
 }

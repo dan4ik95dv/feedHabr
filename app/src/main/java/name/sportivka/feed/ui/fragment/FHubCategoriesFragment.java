@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import javax.inject.Inject;
 
@@ -28,6 +29,8 @@ public class FHubCategoriesFragment extends Fragment implements FHubCategoriesMv
     @BindView(R.id.content_main_recycler_view)
     RecyclerView contentMainRecyclerView;
     Unbinder unbinder;
+    @BindView(R.id.loading_progress)
+    ProgressBar loadingProgress;
 
 
     public FHubCategoriesFragment() {
@@ -37,11 +40,9 @@ public class FHubCategoriesFragment extends Fragment implements FHubCategoriesMv
     @Override
     public void onCreate(Bundle savedInstanceState) {
         DaggerFHubCategoriesComponent.builder().fHubCategoriesModule(new FHubCategoriesModule(getContext())).build().inject(this);
-
         super.onCreate(savedInstanceState);
-
         presenter.attachView(this);
-        presenter.init();
+
     }
 
     @Override
@@ -49,6 +50,7 @@ public class FHubCategoriesFragment extends Fragment implements FHubCategoriesMv
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_hub_categories, container, false);
         unbinder = ButterKnife.bind(this, view);
+        presenter.init();
         initView();
         return view;
     }
@@ -72,11 +74,11 @@ public class FHubCategoriesFragment extends Fragment implements FHubCategoriesMv
 
     @Override
     public void hideProgress() {
-
+        loadingProgress.setVisibility(View.GONE);
     }
 
     @Override
     public void showProgress() {
-
+        loadingProgress.setVisibility(View.VISIBLE);
     }
 }

@@ -1,8 +1,22 @@
-<?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/content_main_recycler_view"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="name.sportivka.feed.ui.activity.AHubsActivity"
-    tools:showIn="@layout/app_bar_main" />
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/content_main_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="name.sportivka.feed.ui.activity.AMainActivity"
+        tools:showIn="@layout/app_bar_main" />
+
+    <ProgressBar
+        android:id="@+id/loading_progress"
+        style="@style/Widget.AppCompat.ProgressBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="@dimen/margin_mini"
+        android:visibility="gone" />
+
+</FrameLayout>

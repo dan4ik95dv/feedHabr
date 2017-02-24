@@ -19,6 +19,7 @@ public class Constants {
     public static final int READ_TIMEOUT = 10;
     public static final int WRITE_TIMEOUT = 10;
     public static final int DELAY = 2000;
+    public static final String GITHUB_URL = "https://github.com/dan4ik95dv/feedHabr";
 
     public static final String[] FILTER_TYPE = new String[]{"daily",
             "weekly",
@@ -36,6 +37,9 @@ public class Constants {
     public static final String[] TYPES = new String[]{
             "best", "interesting", "all"
     };
+    public static final int BEST_TYPE = 0;
+    public static final int INTERESTING_TYPE = 1;
+    public static final int ALL_TYPE = 2;
 
     public enum SearchType {
         DATE("date"),
