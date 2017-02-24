@@ -3,6 +3,10 @@ package name.sportivka.feed.mvp.presenter;
 import android.content.Context;
 import android.os.Handler;
 
+import com.squareup.otto.Bus;
+
+import javax.inject.Inject;
+
 import name.sportivka.feed.App;
 import name.sportivka.feed.Constants;
 import name.sportivka.feed.mvp.Presenter;
@@ -14,6 +18,8 @@ import name.sportivka.feed.ui.activity.BaseActivity;
  */
 
 public class ASplashPresenter implements Presenter<ASplashMvpView> {
+    @Inject
+    Bus bus;
 
     private ASplashMvpView ASplashMvpView;
     private Context context;
@@ -36,11 +42,13 @@ public class ASplashPresenter implements Presenter<ASplashMvpView> {
 
     @Override
     public void attachView(ASplashMvpView view) {
+        this.bus.register(this);
         this.ASplashMvpView = view;
     }
 
     @Override
     public void detachView() {
+        this.bus.unregister(this);
         this.ASplashMvpView = null;
     }
 

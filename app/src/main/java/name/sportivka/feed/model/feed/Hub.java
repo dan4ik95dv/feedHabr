@@ -18,6 +18,7 @@ import name.sportivka.feed.model.MyDatabase;
  */
 @Parcel(analyze = Hub.class)
 @Table(database = MyDatabase.class)
+
 public class Hub extends BaseModel {
     @Column
     @PrimaryKey
@@ -121,4 +122,5 @@ public class Hub extends BaseModel {
     public String getTitle() {
         return title;
     }
+
 }

@@ -2,6 +2,8 @@ package name.sportivka.feed.di;
 
 import android.content.Context;
 
+import com.squareup.otto.Bus;
+
 import dagger.Module;
 import dagger.Provides;
 import name.sportivka.feed.App;
@@ -28,5 +30,11 @@ public class AppModule {
     @AppScope
     public App provideApp() {
         return this.app;
+    }
+
+    @Provides
+    @AppScope
+    public Bus provideBus() {
+        return new Bus();
     }
 }

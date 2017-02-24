@@ -61,6 +61,12 @@ public class AHubsActivity extends BaseActivity implements AHubsMvpView {
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        presenter.detachView();
+    }
+
+    @Override
     public void hideProgress() {
 
     }

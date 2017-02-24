@@ -66,6 +66,7 @@ public class FHubCategoriesFragment extends Fragment implements FHubCategoriesMv
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        presenter.detachView();
         unbinder.unbind();
     }
 

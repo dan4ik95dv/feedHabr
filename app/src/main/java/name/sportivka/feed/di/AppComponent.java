@@ -3,6 +3,8 @@ package name.sportivka.feed.di;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.squareup.otto.Bus;
+
 import dagger.Component;
 import name.sportivka.feed.App;
 import name.sportivka.feed.di.scope.AppScope;
@@ -24,6 +26,8 @@ public interface AppComponent {
     Context getContext();
 
     SharedPreferences getSharedPreferences();
+
+    Bus getBus();
 
     void inject(App app);
 

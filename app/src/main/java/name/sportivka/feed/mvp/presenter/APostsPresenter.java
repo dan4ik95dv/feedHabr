@@ -5,10 +5,15 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 
+import com.squareup.otto.Bus;
+
 import org.parceler.Parcels;
+
+import javax.inject.Inject;
 
 import name.sportivka.feed.App;
 import name.sportivka.feed.R;
+import name.sportivka.feed.event.TypePostsEvent;
 import name.sportivka.feed.model.feed.Hub;
 import name.sportivka.feed.mvp.Presenter;
 import name.sportivka.feed.mvp.view.APostsMvpView;
@@ -21,6 +26,9 @@ import static name.sportivka.feed.Constants.HUB;
  */
 
 public class APostsPresenter implements Presenter<APostsMvpView> {
+
+    @Inject
+    Bus bus;
 
     private ArrayAdapter<String> spinnerPostFilterAdapter;
     private AdapterView.OnItemSelectedListener spinnerPostFilteritemSelectedListener;
@@ -56,7 +64,7 @@ public class APostsPresenter implements Presenter<APostsMvpView> {
                     public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
                         if (currentType == position) return;
                         currentType = position;
-                        loadData();
+                        bus.post(new TypePostsEvent(hub, currentType));
                     }
 
                     @Override
@@ -65,7 +73,7 @@ public class APostsPresenter implements Presenter<APostsMvpView> {
                     }
                 };
                 aPostsMvpView.changeTitle(hub.getTitle());
-                loadData();
+                aPostsMvpView.showPosts(currentType, hub);
             } else
                 activity.finish();
 
@@ -80,17 +88,14 @@ public class APostsPresenter implements Presenter<APostsMvpView> {
 
     @Override
     public void attachView(APostsMvpView view) {
+        this.bus.register(this);
         this.aPostsMvpView = view;
     }
 
     @Override
     public void detachView() {
+        this.bus.unregister(this);
         this.aPostsMvpView = null;
-    }
-
-
-    private void loadData() {
-        // TODO: 24.02.17 Sent to fragment
     }
 
 

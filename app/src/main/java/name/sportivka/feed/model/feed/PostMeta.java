@@ -18,9 +18,9 @@ import name.sportivka.feed.model.MyDatabase;
 
 @Table(database = MyDatabase.class)
 public class PostMeta extends BaseModel {
-    @Column
+    @Column(name = "postmeta_id")
     @PrimaryKey
-    long myId;
+    long postmeta_id;
     @Column
     @SerializedName("edit_url")
     String editUrl;
@@ -84,7 +84,7 @@ public class PostMeta extends BaseModel {
         if (styles == null || styles.isEmpty()) {
             styles = SQLite.select()
                     .from(Style.class)
-                    .where(Style_Table.myId.eq(myId))
+                    .where(Style_Table.myId.eq(postmeta_id))
                     .queryList();
         }
         return styles;
@@ -95,7 +95,7 @@ public class PostMeta extends BaseModel {
         if (scripts == null || scripts.isEmpty()) {
             scripts = SQLite.select()
                     .from(Script.class)
-                    .where(Script_Table.myId.eq(myId))
+                    .where(Script_Table.myId.eq(postmeta_id))
                     .queryList();
         }
         return scripts;

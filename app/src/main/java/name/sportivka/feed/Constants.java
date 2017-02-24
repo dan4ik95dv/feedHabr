@@ -31,6 +31,10 @@ public class Constants {
     public static final String HUB = "hub";
     public static final String CATEGORY_TITLE = "category_title";
 
+    public static final String[] TYPES = new String[]{
+            "all", "best", "interesting"
+    };
+
     public enum SearchType {
         DATE("date"),
         RATING("rating"),

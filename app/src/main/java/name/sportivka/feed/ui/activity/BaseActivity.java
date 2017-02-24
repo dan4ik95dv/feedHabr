@@ -28,6 +28,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
     }
 
@@ -60,6 +61,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                     | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         }
     }
+
 
     public void showFragment(Class fragmentClass, Bundle args) {
         Fragment fragment = null;

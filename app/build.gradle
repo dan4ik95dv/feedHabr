@@ -105,6 +105,12 @@ dependencies {
     compile 'uk.co.chrisjenx:calligraphy:2.2.0'
 
     /**
+     * Otto
+     * http://square.github.io/otto/
+     */
+    compile 'com.squareup:otto:1.3.8'
+
+    /**
      * Parceler
      * see https://github.com/johncarl81/parceler
      */

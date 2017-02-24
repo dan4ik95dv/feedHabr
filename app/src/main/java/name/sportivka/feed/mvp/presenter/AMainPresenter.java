@@ -7,10 +7,13 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 
+import com.squareup.otto.Bus;
+
 import javax.inject.Inject;
 
 import name.sportivka.feed.App;
 import name.sportivka.feed.R;
+import name.sportivka.feed.event.TypePostsEvent;
 import name.sportivka.feed.mvp.Presenter;
 import name.sportivka.feed.mvp.view.AMainMvpView;
 import name.sportivka.feed.provider.FlowProvider;
@@ -31,6 +34,8 @@ public class AMainPresenter implements Presenter<AMainMvpView> {
     HubProvider hubProvider;
     @Inject
     PostProvider postProvider;
+    @Inject
+    Bus bus;
 
     private ArrayAdapter<String> spinnerPostFilterAdapter;
     private AdapterView.OnItemSelectedListener spinnerPostFilteritemSelectedListener;
@@ -45,6 +50,7 @@ public class AMainPresenter implements Presenter<AMainMvpView> {
 
     public AMainPresenter(Context context) {
         inject(context);
+
         this.context = context;
     }
 
@@ -58,11 +64,13 @@ public class AMainPresenter implements Presenter<AMainMvpView> {
 
     @Override
     public void attachView(AMainMvpView view) {
+        this.bus.register(this);
         this.AMainMvpView = view;
     }
 
     @Override
     public void detachView() {
+        this.bus.unregister(this);
         this.AMainMvpView = null;
     }
 
@@ -78,8 +86,7 @@ public class AMainPresenter implements Presenter<AMainMvpView> {
                 if (currentType == position) return;
                 currentPage = 1;
                 currentType = position;
-                loadData(position);
-
+                bus.post(new TypePostsEvent(currentType));
             }
 
             @Override

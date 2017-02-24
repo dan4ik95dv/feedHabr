@@ -1,5 +1,6 @@
 package name.sportivka.feed.mvp.view;
 
+import name.sportivka.feed.model.feed.Hub;
 import name.sportivka.feed.mvp.MvpView;
 
 /**
@@ -8,4 +9,6 @@ import name.sportivka.feed.mvp.MvpView;
 
 public interface APostsMvpView extends MvpView {
     void changeTitle(String categoryTitle);
+
+    void showPosts(int type, Hub hub);
 }

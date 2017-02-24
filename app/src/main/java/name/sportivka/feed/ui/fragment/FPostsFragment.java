@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.parceler.Parcels;
+
 import javax.inject.Inject;
 
 import butterknife.BindView;
@@ -17,6 +19,7 @@ import butterknife.Unbinder;
 import name.sportivka.feed.R;
 import name.sportivka.feed.di.fragment.DaggerFPostsComponent;
 import name.sportivka.feed.di.fragment.FPostsModule;
+import name.sportivka.feed.model.feed.Hub;
 import name.sportivka.feed.mvp.presenter.FPostsPresenter;
 import name.sportivka.feed.mvp.view.FPostsMvpView;
 import name.sportivka.feed.ui.widget.DividerItemDecoration;
@@ -26,6 +29,7 @@ import name.sportivka.feed.ui.widget.ItemClickSupport;
 public class FPostsFragment extends Fragment implements FPostsMvpView {
 
     public static final String ARG_TYPE = "type";
+    public static final String ARG_HUB = "hub";
 
     @BindView(R.id.content_main_recycler_view)
     RecyclerView contentMainRecyclerView;
@@ -35,6 +39,7 @@ public class FPostsFragment extends Fragment implements FPostsMvpView {
     Unbinder unbinder;
     @Inject
     FPostsPresenter presenter;
+    Hub hub;
     private int type;
 
     public FPostsFragment() {
@@ -47,6 +52,7 @@ public class FPostsFragment extends Fragment implements FPostsMvpView {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             type = getArguments().getInt(ARG_TYPE);
+            hub = Parcels.unwrap(getArguments().getParcelable(ARG_HUB));
         }
         presenter.attachView(this);
         presenter.init();
@@ -58,7 +64,7 @@ public class FPostsFragment extends Fragment implements FPostsMvpView {
         View view = inflater.inflate(R.layout.fragment_posts, container, false);
         unbinder = ButterKnife.bind(this, view);
         initView();
-        presenter.loadData(type);
+        presenter.loadData(type, hub);
         return view;
     }
 
@@ -82,6 +88,7 @@ public class FPostsFragment extends Fragment implements FPostsMvpView {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        presenter.detachView();
         unbinder.unbind();
     }
 

@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.raizlabs.android.dbflow.list.FlowCursorList;
+import com.squareup.otto.Bus;
 
 import org.parceler.Parcels;
 
@@ -36,6 +37,8 @@ public class AHubsPresenter implements Presenter<AHubsMvpView> {
 
     @Inject
     HubProvider hubProvider;
+    @Inject
+    Bus bus;
 
     private HubsAdapter hubsAdapter;
     private ItemClickSupport.OnItemClickListener itemClickListener;
@@ -63,11 +66,13 @@ public class AHubsPresenter implements Presenter<AHubsMvpView> {
 
     @Override
     public void attachView(AHubsMvpView view) {
+        this.bus.register(this);
         this.aHubsMvpView = view;
     }
 
     @Override
     public void detachView() {
+        this.bus.unregister(this);
         this.aHubsMvpView = null;
     }
 
@@ -102,8 +107,9 @@ public class AHubsPresenter implements Presenter<AHubsMvpView> {
     private void loadData() {
         aHubsMvpView.showProgress();
         final HubProvider.AsyncData<List<Hub>, FlowCursorList<Hub>> asyncData = new HubProvider.AsyncData<List<Hub>, FlowCursorList<Hub>>() {
+
             @Override
-            public void onSuccess(List<Hub> data, int nextPage, boolean isCache) {
+            public void onSuccess(List<Hub> data, int nextPage) {
                 hubsAdapter.setHubList(data);
                 aHubsMvpView.hideProgress();
             }

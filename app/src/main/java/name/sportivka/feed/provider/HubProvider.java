@@ -68,9 +68,8 @@ public class HubProvider {
             getNetworkAllHubs(page, asyncData);
         else
             asyncData.onError();
-
-
     }
+
 
     void getNetworkHubCategories(final AsyncData<List<HubCategory>, FlowCursorList<HubCategory>> asyncData) {
         hubApi.getHubCategories().enqueue(new Callback<Response<List<HubCategory>>>() {
@@ -78,7 +77,7 @@ public class HubProvider {
             public void onResponse(Call<Response<List<HubCategory>>> call, retrofit2.Response<Response<List<HubCategory>>> response) {
                 if (response.isSuccessful()) {
                     putHubCategoriesToCache(response.body().getData());
-                    asyncData.onSuccess(response.body().getData(), 0, false);
+                    asyncData.onSuccess(response.body().getData(), 0);
                 } else {
                     asyncData.onError();
                 }
@@ -98,7 +97,7 @@ public class HubProvider {
                 if (response.isSuccessful()) {
                     int nextPage = response.body().getNextPage() != null ? response.body().getNextPage().getNext() : 0;
                     putHubsToCache(response.body().getData(), category);
-                    asyncData.onSuccess(response.body().getData(), nextPage, false);
+                    asyncData.onSuccess(response.body().getData(), nextPage);
                 } else {
                     asyncData.onError();
                 }
@@ -118,7 +117,7 @@ public class HubProvider {
                 if (response.isSuccessful()) {
                     int nextPage = response.body().getNextPage() != null ? response.body().getNextPage().getNext() : 0;
                     putHubsToCache(response.body().getData());
-                    asyncData.onSuccess(response.body().getData(), nextPage, false);
+                    asyncData.onSuccess(response.body().getData(), nextPage);
                 } else {
                     asyncData.onError();
                 }
@@ -204,7 +203,7 @@ public class HubProvider {
 
 
     public interface AsyncData<T, F> {
-        void onSuccess(T data, int nextPage, boolean isCache);
+        void onSuccess(T data, int nextPage);
 
         void onSuccessCache(F data, int nextPage);
 

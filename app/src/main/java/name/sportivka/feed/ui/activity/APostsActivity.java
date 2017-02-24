@@ -7,6 +7,8 @@ import android.widget.FrameLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import org.parceler.Parcels;
+
 import javax.inject.Inject;
 
 import butterknife.BindView;
@@ -14,6 +16,7 @@ import butterknife.ButterKnife;
 import name.sportivka.feed.R;
 import name.sportivka.feed.di.activity.APostsModule;
 import name.sportivka.feed.di.activity.DaggerAPostsComponent;
+import name.sportivka.feed.model.feed.Hub;
 import name.sportivka.feed.mvp.presenter.APostsPresenter;
 import name.sportivka.feed.mvp.view.APostsMvpView;
 import name.sportivka.feed.ui.fragment.FPostsFragment;
@@ -40,14 +43,8 @@ public class APostsActivity extends BaseActivity implements APostsMvpView {
         presenter.attachView(this);
         presenter.init();
         initToolbar();
-        showPosts();
     }
 
-    private void showPosts() {
-        Bundle bundle = new Bundle();
-        bundle.putInt(FPostsFragment.ARG_TYPE, 0);
-        showFragment(FPostsFragment.class, bundle);
-    }
 
     private void initToolbar() {
         setSupportActionBar(toolbar);
@@ -81,4 +78,15 @@ public class APostsActivity extends BaseActivity implements APostsMvpView {
     public void changeTitle(String categoryTitle) {
         titlePostsTextview.setText(categoryTitle);
     }
+
+    @Override
+    public void showPosts(int type, Hub hub) {
+        Bundle bundle = new Bundle();
+        bundle.putInt(FPostsFragment.ARG_TYPE, 0);
+        if (hub != null) {
+            bundle.putParcelable(FPostsFragment.ARG_HUB, Parcels.wrap(hub));
+        }
+        showFragment(FPostsFragment.class, bundle);
+    }
+
 }

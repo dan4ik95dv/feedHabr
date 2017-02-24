@@ -2,7 +2,6 @@ package name.sportivka.feed.provider;
 
 import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.list.FlowCursorList;
-import com.raizlabs.android.dbflow.list.FlowQueryList;
 import com.raizlabs.android.dbflow.sql.language.ConditionGroup;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
@@ -88,13 +87,46 @@ public class PostProvider {
             pasyncDatasts.onError();
     }
 
+    public void getHubFeed(int page, String hub, String type, PostProvider.AsyncData<List<Post>, FlowCursorList<Post>> asyncData) {
+        getCacheHubFeed(page, hub, type, asyncData);
+        if (connectionDetector.isConnectingToInternet())
+            getNetworkHubFeed(page, hub, type, asyncData);
+        else
+            asyncData.onError();
+    }
+
+    private void getNetworkHubFeed(int page, String hub, String type, final PostProvider.AsyncData<List<Post>, FlowCursorList<Post>> asyncData) {
+        postApi.getHubFeed(hub, type, page, Constants.INCLUDE, Constants.EXCLUDE_WITHOUT_FLOW, Constants.PER_PAGE).enqueue(new Callback<Response<List<Post>>>() {
+            @Override
+            public void onResponse(Call<Response<List<Post>>> call, retrofit2.Response<Response<List<Post>>> response) {
+                if (response.isSuccessful()) {
+                    putPostsToCache(response.body().getData());
+                    asyncData.onSuccess(response.body().getData(), getNextPage(response.body()));
+                } else {
+                    asyncData.onError();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Response<List<Post>>> call, Throwable t) {
+                asyncData.onError();
+            }
+        });
+    }
+
+    private void getCacheHubFeed(int page, String hub, String type, PostProvider.AsyncData<List<Post>, FlowCursorList<Post>> asyncData) {
+        FlowCursorList<Post> result = SQLite.select().from(Post.class).where(Post_Table.hubsAliases.like("%" + hub + "%")).cursorList();
+        int nextPage = result.getCount() == Constants.PER_PAGE ? page + 1 : 0;
+        asyncData.onSuccessCache(result, nextPage);
+    }
+
     private void getNetworkSearchPosts(String search, int page, String sort, boolean getArticle, final AsyncData<List<Post>, FlowCursorList<Post>> asyncData) {
         postApi.searchPosts(search, page, sort, getArticle).enqueue(new Callback<Response<List<Post>>>() {
             @Override
             public void onResponse(Call<Response<List<Post>>> call, retrofit2.Response<Response<List<Post>>> response) {
                 if (response.isSuccessful()) {
                     putPostsToCache(response.body().getData());
-                    asyncData.onSuccess(response.body().getData(), 0, false);
+                    asyncData.onSuccess(response.body().getData(), getNextPage(response.body()));
                 } else {
                     asyncData.onError();
                 }
@@ -114,9 +146,9 @@ public class PostProvider {
                 .or(Post_Table.tagsString.like("%" + search + "%"))
                 .or(Post_Table.textHtml.like("%" + search + "%"));
 
-        FlowQueryList<Post> result = SQLite.select().from(Post.class).where(conditionGroup).flowQueryList();
+        FlowCursorList<Post> result = SQLite.select().from(Post.class).where(conditionGroup).cursorList();
         int nextPage = result.getCount() == Constants.PER_PAGE ? page + 1 : 0;
-        asyncData.onSuccess(result, nextPage, true);
+        asyncData.onSuccessCache(result, nextPage);
     }
 
     private void getNetworkPubInteresting(int page, final AsyncData<List<Post>, FlowCursorList<Post>> asyncData) {
@@ -125,7 +157,7 @@ public class PostProvider {
             public void onResponse(Call<Response<List<Post>>> call, retrofit2.Response<Response<List<Post>>> response) {
                 if (response.isSuccessful()) {
                     putPostsToCache(response.body().getData());
-                    asyncData.onSuccess(response.body().getData(), 0, false);
+                    asyncData.onSuccess(response.body().getData(), getNextPage(response.body()));
                 } else {
                     asyncData.onError();
                 }
@@ -139,9 +171,9 @@ public class PostProvider {
     }
 
     private void getCachePubInteresting(int page, AsyncData<List<Post>, FlowCursorList<Post>> asyncData) {
-        FlowQueryList<Post> result = SQLite.select().from(Post.class).where(Post_Table.interesting.eq(true)).flowQueryList();
+        FlowCursorList<Post> result = SQLite.select().from(Post.class).where(Post_Table.interesting.eq(true)).cursorList();
         int nextPage = result.getCount() == Constants.PER_PAGE ? page + 1 : 0;
-        asyncData.onSuccess(result, nextPage, true);
+        asyncData.onSuccessCache(result, nextPage);
     }
 
     private void getNetworkPubBest(String type, int page, final AsyncData<List<Post>, FlowCursorList<Post>> asyncData) {
@@ -150,7 +182,7 @@ public class PostProvider {
             public void onResponse(Call<Response<List<Post>>> call, retrofit2.Response<Response<List<Post>>> response) {
                 if (response.isSuccessful()) {
                     putPostsToCache(response.body().getData());
-                    asyncData.onSuccess(response.body().getData(), 0, false);
+                    asyncData.onSuccess(response.body().getData(), getNextPage(response.body()));
                 } else {
                     asyncData.onError();
                 }
@@ -175,7 +207,7 @@ public class PostProvider {
             public void onResponse(Call<Response<List<Post>>> call, retrofit2.Response<Response<List<Post>>> response) {
                 if (response.isSuccessful()) {
                     putPostsToCache(response.body().getData());
-                    asyncData.onSuccess(response.body().getData(), 0, false);
+                    asyncData.onSuccess(response.body().getData(), getNextPage(response.body()));
                 } else {
                     asyncData.onError();
                 }
@@ -201,7 +233,8 @@ public class PostProvider {
             public void onResponse(Call<Response<Post>> call, retrofit2.Response<Response<Post>> response) {
                 if (response.isSuccessful()) {
                     putPostToCache(response.body().getData());
-                    asyncData.onSuccess(response.body().getData(), 0, false);
+
+                    asyncData.onSuccess(response.body().getData(), getNextPage(response.body()));
                 } else {
                     asyncData.onError();
                 }
@@ -229,9 +262,14 @@ public class PostProvider {
                                 post.getAuthor().getGeo().save();
                                 post.getAuthor().getCounters().save();
                                 post.getFlow().save();
+
+                                StringBuilder hubAliases = new StringBuilder();
                                 for (Hub hub : post.getHubs()) {
+                                    hubAliases.append(hub.getAlias());
+                                    hubAliases.append(';');
                                     hub.save();
                                 }
+                                post.setHubAliases(hubAliases.toString());
                                 post.save();
                             }
                         }).add(post).build())
@@ -259,9 +297,14 @@ public class PostProvider {
                                 post.getAuthor().getGeo().save();
                                 post.getAuthor().getCounters().save();
                                 post.getFlow().save();
+
+                                StringBuilder hubAliases = new StringBuilder();
                                 for (Hub hub : post.getHubs()) {
+                                    hubAliases.append(hub.getAlias());
+                                    hubAliases.append(';');
                                     hub.save();
                                 }
+                                post.setHubAliases(hubAliases.toString());
                                 post.save();
                             }
                         }).addAll(posts).build())
@@ -279,8 +322,13 @@ public class PostProvider {
                 }).build().execute();
     }
 
+    public int getNextPage(Response response) {
+        return response.getNextPage() != null && response.getNextPage().getNext() > 0 ? response.getNextPage().getNext() : 1;
+    }
+
+
     public interface AsyncData<T, F> {
-        void onSuccess(T data, int nextPage, boolean isCache);
+        void onSuccess(T data, int nextPage);
 
         void onSuccessCache(F data, int nextPage);
 

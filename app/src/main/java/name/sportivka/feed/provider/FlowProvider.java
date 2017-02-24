@@ -1,7 +1,7 @@
 package name.sportivka.feed.provider;
 
 import com.raizlabs.android.dbflow.config.FlowManager;
-import com.raizlabs.android.dbflow.list.FlowQueryList;
+import com.raizlabs.android.dbflow.list.FlowCursorList;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 import com.raizlabs.android.dbflow.structure.database.transaction.ProcessModelTransaction;
@@ -43,36 +43,40 @@ public class FlowProvider {
         this.flowApi = flowApi;
     }
 
-    public void getFlowHubFeed(String flow, String type, int page, final AsyncData<List<Post>> asyncData) {
+    public void getFlowHubFeed(String flow, String type, int page, final AsyncData<List<Post>, FlowCursorList<Post>> asyncData) {
+        getCacheFlowHubFeed(page, flow, type, asyncData);
+
         if (connectionDetector.isConnectingToInternet())
             getNetworkFlowHubFeed(page, flow, type, asyncData);
         else
-            getCacheFlowHubFeed(page, flow, type, asyncData);
+            asyncData.onError();
     }
 
 
-    public void getFlows(final AsyncData<List<Flow>> asyncData) {
+    public void getFlows(final AsyncData<List<Flow>, FlowCursorList<Flow>> asyncData) {
+        getCacheFlows(asyncData);
         if (connectionDetector.isConnectingToInternet())
             getNetworkFlows(asyncData);
         else
-            getCacheFlows(asyncData);
+            asyncData.onError();
     }
 
 
-    public void getFlowHubs(int page, String flow, final AsyncData<List<Hub>> asyncData) {
+    public void getFlowHubs(int page, String flow, final AsyncData<List<Hub>, FlowCursorList<Hub>> asyncData) {
+        getCacheFlowHubs(page, flow, asyncData);
         if (connectionDetector.isConnectingToInternet())
             getNetworkFlowHubs(page, flow, asyncData);
         else
-            getCacheFlowHubs(page, flow, asyncData);
+            asyncData.onError();
     }
 
-    void getNetworkFlows(final AsyncData<List<Flow>> asyncData) {
+    void getNetworkFlows(final AsyncData<List<Flow>, FlowCursorList<Flow>> asyncData) {
         flowApi.getFlows().enqueue(new Callback<Response<List<Flow>>>() {
             @Override
             public void onResponse(Call<Response<List<Flow>>> call, retrofit2.Response<Response<List<Flow>>> response) {
                 if (response.isSuccessful()) {
                     putFlowsToCache(response.body().getData());
-                    asyncData.onSuccess(response.body().getData(), 0, false);
+                    asyncData.onSuccess(response.body().getData(), 0);
                 } else {
                     asyncData.onError();
                 }
@@ -85,7 +89,7 @@ public class FlowProvider {
         });
     }
 
-    void getNetworkFlowHubFeed(int page, String flow, String type, final AsyncData<List<Post>> asyncData) {
+    void getNetworkFlowHubFeed(int page, String flow, String type, final AsyncData<List<Post>, FlowCursorList<Post>> asyncData) {
         flowApi.getFlowHubFeed(flow, type, page, Constants.INCLUDE, Constants.EXCLUDE_WITH_FLOW, Constants.PER_PAGE)
                 .enqueue(new Callback<Response<List<Post>>>() {
                     @Override
@@ -93,7 +97,7 @@ public class FlowProvider {
                         if (response.isSuccessful()) {
                             int nextPage = response.body().getNextPage() != null ? response.body().getNextPage().getNext() : 0;
                             putPostsToCache(response.body().getData());
-                            asyncData.onSuccess(response.body().getData(), nextPage, false);
+                            asyncData.onSuccess(response.body().getData(), nextPage);
                         } else {
                             asyncData.onError();
                         }
@@ -106,14 +110,14 @@ public class FlowProvider {
                 });
     }
 
-    void getNetworkFlowHubs(int page, String flow, final AsyncData<List<Hub>> asyncData) {
+    void getNetworkFlowHubs(int page, String flow, final AsyncData<List<Hub>, FlowCursorList<Hub>> asyncData) {
         flowApi.getFlowHubs(flow, page).enqueue(new Callback<Response<List<Hub>>>() {
             @Override
             public void onResponse(Call<Response<List<Hub>>> call, retrofit2.Response<Response<List<Hub>>> response) {
                 if (response.isSuccessful()) {
                     int nextPage = response.body().getNextPage() != null ? response.body().getNextPage().getNext() : 0;
                     putHubsToCache(response.body().getData());
-                    asyncData.onSuccess(response.body().getData(), nextPage, false);
+                    asyncData.onSuccess(response.body().getData(), nextPage);
                 } else {
                     asyncData.onError();
                 }
@@ -126,27 +130,27 @@ public class FlowProvider {
         });
     }
 
-    void getCacheFlowHubs(final int page, final AsyncData<List<Hub>> asyncData) {
+    void getCacheFlowHubs(final int page, final AsyncData<List<Hub>, FlowCursorList<Hub>> asyncData) {
         getCacheFlowHubs(page, null, asyncData);
     }
 
-    void getCacheFlowHubs(final int page, final String flow, final AsyncData<List<Hub>> asyncData) {
+    void getCacheFlowHubs(final int page, final String flow, final AsyncData<List<Hub>, FlowCursorList<Hub>> asyncData) {
         int offset = (page - 1) * Constants.PER_PAGE;
-        FlowQueryList<Hub> result = isEmpty(flow) ? SQLite.select().from(Hub.class).offset(offset).limit(Constants.PER_PAGE).flowQueryList() : SQLite.select().from(Hub.class).where(Flow_Table.name.eq(flow)).offset(offset).limit(Constants.PER_PAGE).flowQueryList();
+        FlowCursorList<Hub> result = isEmpty(flow) ? SQLite.select().from(Hub.class).offset(offset).limit(Constants.PER_PAGE).cursorList() : SQLite.select().from(Hub.class).where(Flow_Table.name.eq(flow)).offset(offset).limit(Constants.PER_PAGE).cursorList();
 
         int nextPage = result.getCount() == Constants.PER_PAGE ? page + 1 : 0;
-        asyncData.onSuccess(result, nextPage, true);
+        asyncData.onSuccessCache(result, nextPage);
     }
 
-    void getCacheFlowHubFeed(int page, String flow, String type, AsyncData<List<Post>> asyncData) {
-        FlowQueryList<Post> result = SQLite.select().from(Post.class).where(Flow_Table.name.eq(flow)).flowQueryList();
+    void getCacheFlowHubFeed(int page, String flow, String type, AsyncData<List<Post>, FlowCursorList<Post>> asyncData) {
+        FlowCursorList<Post> result = SQLite.select().from(Post.class).where(Flow_Table.name.eq(flow)).cursorList();
         int nextPage = result.getCount() == Constants.PER_PAGE ? page + 1 : 0;
-        asyncData.onSuccess(result, nextPage, true);
+        asyncData.onSuccessCache(result, nextPage);
     }
 
-    void getCacheFlows(AsyncData<List<Flow>> asyncData) {
-        FlowQueryList<Flow> result = SQLite.select().from(Flow.class).flowQueryList();
-        asyncData.onSuccess(result, 0, true);
+    void getCacheFlows(AsyncData<List<Flow>, FlowCursorList<Flow>> asyncData) {
+        FlowCursorList<Flow> result = SQLite.select().from(Flow.class).cursorList();
+        asyncData.onSuccessCache(result, 0);
     }
 
     void putFlowsToCache(final List<Flow> flows) {
@@ -213,9 +217,14 @@ public class FlowProvider {
                                 post.getAuthor().getGeo().save();
                                 post.getAuthor().getCounters().save();
                                 post.getFlow().save();
+
+                                StringBuilder hubAliases = new StringBuilder();
                                 for (Hub hub : post.getHubs()) {
+                                    hubAliases.append(hub.getAlias());
+                                    hubAliases.append(';');
                                     hub.save();
                                 }
+                                post.setHubAliases(hubAliases.toString());
                                 post.save();
                             }
                         }).addAll(posts).build())
@@ -233,8 +242,10 @@ public class FlowProvider {
                 }).build().execute();
     }
 
-    public interface AsyncData<T> {
-        void onSuccess(T data, int nextPage, boolean isCache);
+    public interface AsyncData<T, F> {
+        void onSuccess(T data, int nextPage);
+
+        void onSuccessCache(F data, int nextPage);
 
         void onError();
     }

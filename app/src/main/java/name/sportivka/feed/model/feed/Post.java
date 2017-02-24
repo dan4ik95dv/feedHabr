@@ -60,8 +60,7 @@ public class Post extends BaseModel {
     boolean interesting;
 
     @Column
-    @ForeignKey
-    @PrimaryKey
+    @ForeignKey(saveForeignKeyModel = false, references = @ForeignKeyReference(columnName = "ref_postmeta_id", foreignKeyColumnName = "postmeta_id"))
     @SerializedName("metadata")
     PostMeta postMeta;
 
@@ -116,6 +115,9 @@ public class Post extends BaseModel {
     @Column
     @SerializedName("text_html")
     String textHtml;
+
+    @Column
+    String hubsAliases;
 
     @SerializedName("hubs")
     List<Hub> hubs;
@@ -236,7 +238,7 @@ public class Post extends BaseModel {
         return votesCount;
     }
 
-    @OneToMany(methods = {OneToMany.Method.ALL}, variableName = "hubs")
+    @OneToMany(methods = {OneToMany.Method.ALL}, variableName = "hubs", isVariablePrivate = true)
     public List<Hub> getHubs() {
         if (hubs == null || hubs.isEmpty()) {
             hubs = SQLite.select()
@@ -247,7 +249,11 @@ public class Post extends BaseModel {
         return hubs;
     }
 
-    @OneToMany(methods = {OneToMany.Method.ALL}, variableName = "polls")
+    public void setHubs(List<Hub> hubs) {
+        this.hubs = hubs;
+    }
+
+    @OneToMany(methods = {OneToMany.Method.ALL}, variableName = "polls", isVariablePrivate = true)
     public List<Poll> getPolls() {
         if (polls == null || polls.isEmpty()) {
             polls = SQLite.select()
@@ -256,5 +262,13 @@ public class Post extends BaseModel {
                     .queryList();
         }
         return polls;
+    }
+
+    public void setPolls(List<Poll> polls) {
+        this.polls = polls;
+    }
+
+    public void setHubAliases(String hubAliases) {
+        this.hubsAliases = hubAliases;
     }
 }

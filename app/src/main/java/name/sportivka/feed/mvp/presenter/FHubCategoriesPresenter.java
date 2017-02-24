@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.raizlabs.android.dbflow.list.FlowCursorList;
+import com.squareup.otto.Bus;
 
 import org.parceler.Parcels;
 
@@ -28,7 +29,8 @@ import name.sportivka.feed.ui.widget.ItemClickSupport;
  */
 
 public class FHubCategoriesPresenter implements Presenter<FHubCategoriesMvpView> {
-
+    @Inject
+    Bus bus;
     @Inject
     HubProvider hubProvider;
 
@@ -53,11 +55,13 @@ public class FHubCategoriesPresenter implements Presenter<FHubCategoriesMvpView>
 
     @Override
     public void attachView(FHubCategoriesMvpView view) {
+        this.bus.register(this);
         this.FHubCategoriesMvpView = view;
     }
 
     @Override
     public void detachView() {
+        this.bus.unregister(this);
         this.FHubCategoriesMvpView = null;
     }
 
@@ -82,8 +86,10 @@ public class FHubCategoriesPresenter implements Presenter<FHubCategoriesMvpView>
         FHubCategoriesMvpView.showProgress();
 
         hubProvider.getHubCategories(new HubProvider.AsyncData<List<HubCategory>, FlowCursorList<HubCategory>>() {
+
+
             @Override
-            public void onSuccess(List<HubCategory> data, int nextPage, boolean isCache) {
+            public void onSuccess(List<HubCategory> data, int nextPage) {
                 hubCategoriesAdapter.setHubCategoryList(data);
                 FHubCategoriesMvpView.hideProgress();
             }

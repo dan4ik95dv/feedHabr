@@ -27,11 +27,11 @@ public interface PostApi {
     @GET("posts/interesting")
     Call<Response<List<Post>>> getPubInteresting(@Query("page") int page, @Query("include") String include, @Query("exclude") String exclude, @Query("limit") int limit);
 
-    @GET("feed/all")
-    Call<Response<List<Post>>> getPubSubscription(@Query("page") int page, @Query("include") String include, @Query("exclude") String exclude, @Query("limit") int limit);
-
     @GET("search/posts/{search}")
     Call<Response<List<Post>>> searchPosts(@Path("search") String search, @Query("page") int page, @Query("sort") String sort, @Query("get_article") boolean getArticle);
+
+    @GET("hub/{hub}/{type}")
+    Call<Response<List<Post>>> getHubFeed(@Path("hub") String hub, @Path("type") String type, @Query("page") int page, @Query("include") String include, @Query("exclude") String exclude, @Query("limit") int limit);
 
 
 }
