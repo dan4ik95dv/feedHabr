@@ -171,7 +171,7 @@ public class PostProvider {
     }
 
     private void getCachePubInteresting(int page, AsyncData<List<Post>, FlowCursorList<Post>> asyncData) {
-        FlowCursorList<Post> result = SQLite.select().from(Post.class).where(Post_Table.interesting.eq(true)).cursorList();
+        FlowCursorList<Post> result = SQLite.select().from(Post.class).where(Post_Table.interesting.eq(true)).orderBy(Post_Table.timePublished, false).cursorList();
         int nextPage = result.getCount() == Constants.PER_PAGE ? page + 1 : 0;
         asyncData.onSuccessCache(result, nextPage);
     }

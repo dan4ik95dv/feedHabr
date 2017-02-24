@@ -10,7 +10,7 @@ public class Constants {
     public static final int FIRST_PAGE = 1;
     public static final String INCLUDE = "text_html";
     public static final int PER_PAGE = 30;
-
+    public static final String BASE_URL = "https://habrahabr.ru/";
     public static final String API_URL = "https://api.habrahabr.ru/v1/";
     public static final String API_URL_DEV = "https://api.habrahabr.ru/v1/";
     public static final String API_AUTH_URL = "https://habrahabr.ru/auth/o/";
@@ -30,6 +30,8 @@ public class Constants {
     public static final String HUB_CATEGORY = "hub_category";
     public static final String HUB = "hub";
     public static final String CATEGORY_TITLE = "category_title";
+    public static final String POST_ID = "post_id";
+    public static final String TITLE_POST = "title_post";
 
     public static final String[] TYPES = new String[]{
             "best", "interesting", "all"

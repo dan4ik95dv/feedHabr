@@ -23,6 +23,9 @@
             android:name=".ui.activity.AHubsActivity"
             android:label="" />
         <activity
+            android:name=".ui.activity.APostActivity"
+            android:label="Публикация" />
+        <activity
             android:name=".ui.activity.APostsActivity"
             android:label=""
             android:theme="@style/AppTheme.NoActionBar" />

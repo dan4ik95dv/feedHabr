@@ -1,7 +1,10 @@
 package name.sportivka.feed.mvp.presenter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import com.raizlabs.android.dbflow.list.FlowCursorList;
 import com.squareup.otto.Bus;
@@ -21,6 +24,7 @@ import name.sportivka.feed.mvp.view.FPostsMvpView;
 import name.sportivka.feed.provider.FlowProvider;
 import name.sportivka.feed.provider.HubProvider;
 import name.sportivka.feed.provider.PostProvider;
+import name.sportivka.feed.ui.activity.APostActivity;
 import name.sportivka.feed.ui.adapter.PostsAdapter;
 import name.sportivka.feed.ui.widget.ItemClickSupport;
 
@@ -79,6 +83,17 @@ public class FPostsPresenter implements Presenter<FPostsMvpView> {
             @Override
             public void onRefresh() {
                 loadData(currentType, hub, true);
+            }
+        };
+        itemClickListener = new ItemClickSupport.OnItemClickListener() {
+            @Override
+            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                Post post = postsAdapter.getItem(position);
+                if (post == null) return;
+                Intent intent = new Intent(context, APostActivity.class);
+                intent.putExtra(Constants.POST_ID, post.getId());
+                intent.putExtra(Constants.TITLE_POST, post.getTitle());
+                context.startActivity(intent);
             }
         };
     }

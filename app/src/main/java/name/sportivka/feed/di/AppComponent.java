@@ -10,6 +10,7 @@ import name.sportivka.feed.App;
 import name.sportivka.feed.di.scope.AppScope;
 import name.sportivka.feed.mvp.presenter.AHubsPresenter;
 import name.sportivka.feed.mvp.presenter.AMainPresenter;
+import name.sportivka.feed.mvp.presenter.APostPresenter;
 import name.sportivka.feed.mvp.presenter.APostsPresenter;
 import name.sportivka.feed.mvp.presenter.ASplashPresenter;
 import name.sportivka.feed.mvp.presenter.FHubCategoriesPresenter;
@@ -42,4 +43,6 @@ public interface AppComponent {
     void inject(AHubsPresenter presenter);
 
     void inject(APostsPresenter presenter);
+
+    void inject(APostPresenter presenter);
 }

@@ -19,6 +19,7 @@ public class MainIntercepter implements Interceptor {
         Request originRequest = chain.request();
         Request.Builder builder = originRequest.newBuilder();
         builder.addHeader("User-Agent", Constants.USER_AGENT);
+        builder.addHeader("Content-Type", "application/json; charset=utf-8");
         builder.addHeader("apikey", BuildConfig.API_KEY);
         return chain.proceed(builder.build());
     }

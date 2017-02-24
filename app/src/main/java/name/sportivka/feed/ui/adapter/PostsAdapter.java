@@ -88,6 +88,9 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.BaseViewHold
         return cacheMode ? mPostCacheList.getCount() : mPostList.size();
     }
 
+    public Post getItem(int position) {
+        return cacheMode ? mPostCacheList.getItem(position) : mPostList.get(position);
+    }
 
     abstract class BaseViewHolder extends RecyclerView.ViewHolder {
         BaseViewHolder(View view) {
