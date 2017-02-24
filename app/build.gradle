@@ -105,10 +105,11 @@ dependencies {
     compile 'uk.co.chrisjenx:calligraphy:2.2.0'
 
     /**
-     * Joda Time
-     * see https://github.com/dlew/joda-time-android
+     * Parceler
+     * see https://github.com/johncarl81/parceler
      */
-    compile 'net.danlew:android.joda:2.9.4.1'
+    compile 'org.parceler:parceler-api:1.1.6'
+    apt 'org.parceler:parceler:1.1.6'
 
     /**
      * Android support

@@ -27,6 +27,8 @@ public class Constants {
 
     public static final String TYPE_ACTION = "type_action";
     public static final String CATEGORY = "category";
+    public static final String HUB_CATEGORY = "hub_category";
+    public static final String HUB = "hub";
     public static final String CATEGORY_TITLE = "category_title";
 
     public enum SearchType {

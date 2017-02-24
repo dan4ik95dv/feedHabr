@@ -21,7 +21,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     Unbinder unbinder;
 
     public void startMainAcitity() {
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, AMainActivity.class);
         AndroidUtils.startActivitySafe(this, intent, R.string.error_unknown);
         finish();
     }

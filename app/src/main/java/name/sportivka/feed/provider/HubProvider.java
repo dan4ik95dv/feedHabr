@@ -138,7 +138,7 @@ public class HubProvider {
     void getCacheHubs(final int page, final String category, final AsyncData<List<Hub>, FlowCursorList<Hub>> asyncData) {
         int offset = (page - 1) * Constants.PER_PAGE;
         FlowCursorList<Hub> result =
-                isEmpty(category) ? SQLite.select().from(Hub.class).offset(offset).limit(Constants.PER_PAGE).cursorList() : SQLite.select().from(Hub.class).where(Hub_Table.category.eq(category)).offset(offset).limit(Constants.PER_PAGE).cursorList();
+                isEmpty(category) ? SQLite.select().from(Hub.class).orderBy(Hub_Table.rating, false).offset(offset).limit(Constants.PER_PAGE).cursorList() : SQLite.select().from(Hub.class).where(Hub_Table.category.eq(category)).orderBy(Hub_Table.rating, false).offset(offset).limit(Constants.PER_PAGE).cursorList();
         int nextPage = result.getCount() == Constants.PER_PAGE ? page + 1 : 0;
         asyncData.onSuccessCache(result, nextPage);
     }
@@ -181,9 +181,9 @@ public class HubProvider {
                         new ProcessModelTransaction.ProcessModel<Hub>() {
                             @Override
                             public void processModel(Hub hub, DatabaseWrapper wrapper) {
-                                hub.getFlow().save();
                                 if (category != null)
                                     hub.setCategory(category);
+                                hub.getFlow().save();
                                 hub.save();
                             }
                         }).addAll(hubs).build())

@@ -97,6 +97,10 @@ public class HubsAdapter extends RecyclerView.Adapter<HubsAdapter.BaseViewHolder
         return cacheMode ? mHubCacheList.getCount() : mHubList.size();
     }
 
+    public Hub getItem(int position) {
+        return cacheMode ? mHubCacheList.getItem(position) : mHubList.get(position);
+    }
+
 
     abstract class BaseViewHolder extends RecyclerView.ViewHolder {
         BaseViewHolder(View view) {

@@ -6,11 +6,12 @@ import android.content.SharedPreferences;
 import dagger.Component;
 import name.sportivka.feed.App;
 import name.sportivka.feed.di.scope.AppScope;
-import name.sportivka.feed.mvp.presenter.HubCategoriesPresenter;
-import name.sportivka.feed.mvp.presenter.HubsPresenter;
-import name.sportivka.feed.mvp.presenter.MainPresenter;
-import name.sportivka.feed.mvp.presenter.PostsPresenter;
-import name.sportivka.feed.mvp.presenter.SplashPresenter;
+import name.sportivka.feed.mvp.presenter.AHubsPresenter;
+import name.sportivka.feed.mvp.presenter.AMainPresenter;
+import name.sportivka.feed.mvp.presenter.APostsPresenter;
+import name.sportivka.feed.mvp.presenter.ASplashPresenter;
+import name.sportivka.feed.mvp.presenter.FHubCategoriesPresenter;
+import name.sportivka.feed.mvp.presenter.FPostsPresenter;
 
 /**
  * Created by daniil on 23.02.17.
@@ -26,13 +27,15 @@ public interface AppComponent {
 
     void inject(App app);
 
-    void inject(SplashPresenter presenter);
+    void inject(ASplashPresenter presenter);
 
-    void inject(MainPresenter presenter);
+    void inject(AMainPresenter presenter);
 
-    void inject(PostsPresenter presenter);
+    void inject(FPostsPresenter presenter);
 
-    void inject(HubCategoriesPresenter presenter);
+    void inject(FHubCategoriesPresenter presenter);
 
-    void inject(HubsPresenter presenter);
+    void inject(AHubsPresenter presenter);
+
+    void inject(APostsPresenter presenter);
 }

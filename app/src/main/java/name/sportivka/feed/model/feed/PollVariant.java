@@ -15,8 +15,6 @@ import name.sportivka.feed.model.MyDatabase;
 @Table(database = MyDatabase.class)
 public class PollVariant extends BaseModel {
 
-    boolean firstPlace;
-
     @Column
     @PrimaryKey
     @Unique
@@ -40,6 +38,8 @@ public class PollVariant extends BaseModel {
     @Column
     @SerializedName("votes_count")
     int votesCount;
+
+    boolean firstPlace;
 
     public boolean isFirstPlace() {
         return firstPlace;

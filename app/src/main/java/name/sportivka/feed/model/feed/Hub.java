@@ -9,12 +9,14 @@ import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.annotation.Unique;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
+import org.parceler.Parcel;
+
 import name.sportivka.feed.model.MyDatabase;
 
 /**
  * Created by daniil on 23.02.17.
  */
-
+@Parcel(analyze = Hub.class)
 @Table(database = MyDatabase.class)
 public class Hub extends BaseModel {
     @Column
