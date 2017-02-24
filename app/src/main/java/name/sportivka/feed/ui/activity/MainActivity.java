@@ -15,7 +15,6 @@ import android.widget.Spinner;
 import javax.inject.Inject;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import name.sportivka.feed.R;
 import name.sportivka.feed.di.activity.DaggerMainComponent;
 import name.sportivka.feed.di.activity.MainModule;
@@ -48,7 +47,6 @@ public class MainActivity extends BaseActivity
         DaggerMainComponent.builder().mainModule(new MainModule(this)).build().inject(this);
         presenter.attachView(this);
         setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
         presenter.init();
         initToolbar();
         showPosts();

@@ -15,7 +15,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import name.sportivka.feed.R;
-import name.sportivka.feed.model.feed.HubCategory;
+import name.sportivka.feed.model.feed.Hub;
 
 import static android.text.TextUtils.isEmpty;
 
@@ -24,16 +24,16 @@ import static android.text.TextUtils.isEmpty;
  */
 
 
-public class HubCategoriesAdapter extends RecyclerView.Adapter<HubCategoriesAdapter.BaseViewHolder> {
+public class HubsAdapter extends RecyclerView.Adapter<HubsAdapter.BaseViewHolder> {
 
 
     private Context mContext;
-    private FlowCursorList<HubCategory> mHubCategoryCacheList;
-    private List<HubCategory> mHubCategoryList = new ArrayList<>();
+    private FlowCursorList<Hub> mHubCacheList;
+    private List<Hub> mHubList = new ArrayList<>();
     private boolean cacheMode = false;
 
 
-    public HubCategoriesAdapter(Context mContext) {
+    public HubsAdapter(Context mContext) {
         this.mContext = mContext;
     }
 
@@ -41,23 +41,23 @@ public class HubCategoriesAdapter extends RecyclerView.Adapter<HubCategoriesAdap
         cacheMode = status;
     }
 
-    public void setHubCategoryList(FlowCursorList<HubCategory> hubCategoryCacheList) {
+    public void setHubList(FlowCursorList<Hub> hubCacheList) {
         this.cacheMode = true;
-        this.mHubCategoryCacheList = hubCategoryCacheList;
+        this.mHubCacheList = hubCacheList;
     }
 
-    public void setHubCategoryList(List<HubCategory> hubCategoryList) {
+    public void setHubList(List<Hub> hubList) {
         this.cacheMode = false;
-        this.mHubCategoryList.clear();
-        for (HubCategory hubCategory : hubCategoryList) {
-            mHubCategoryList.add(hubCategory);
+        this.mHubList.clear();
+        for (Hub hub : hubList) {
+            mHubList.add(hub);
         }
         notifyDataSetChanged();
     }
 
-    public void addToHabCategoryList(List<HubCategory> hubCategoryList) {
-        for (HubCategory hubCategory : hubCategoryList) {
-            mHubCategoryList.add(hubCategory);
+    public void addToHabCategoryList(List<Hub> hubList) {
+        for (Hub hub : hubList) {
+            mHubList.add(hub);
         }
         notifyDataSetChanged();
     }
@@ -72,16 +72,16 @@ public class HubCategoriesAdapter extends RecyclerView.Adapter<HubCategoriesAdap
     public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
 
-        return new ViewHolder(inflater.inflate(R.layout.hub_category_item_view, parent, false), mContext);
+        return new ViewHolder(inflater.inflate(R.layout.hub_item_view, parent, false), mContext);
 
 
     }
 
     @Override
     public void onBindViewHolder(BaseViewHolder holder, int position) {
-        HubCategory hubCategory = cacheMode ? mHubCategoryCacheList.getItem(position) : mHubCategoryList.get(position);
-        if (hubCategory != null) {
-            holder.bind(hubCategory);
+        Hub hub = cacheMode ? mHubCacheList.getItem(position) : mHubList.get(position);
+        if (hub != null) {
+            holder.bind(hub);
         }
     }
 
@@ -94,11 +94,7 @@ public class HubCategoriesAdapter extends RecyclerView.Adapter<HubCategoriesAdap
 
     @Override
     public int getItemCount() {
-        return cacheMode ? mHubCategoryCacheList.getCount() : mHubCategoryList.size();
-    }
-
-    public HubCategory getItem(int position) {
-        return cacheMode ? mHubCategoryCacheList.getItem(position) : mHubCategoryList.get(position);
+        return cacheMode ? mHubCacheList.getCount() : mHubList.size();
     }
 
 
@@ -109,15 +105,14 @@ public class HubCategoriesAdapter extends RecyclerView.Adapter<HubCategoriesAdap
 
         abstract void clear();
 
-        abstract void bind(HubCategory hubCategory);
+        abstract void bind(Hub hub);
     }
 
     class ViewHolder extends BaseViewHolder {
         @BindView(R.id.hub_category_title_textview)
-        TextView hubCategoryTitleTextview;
-        @BindView(R.id.hub_category_count_textview)
-        TextView hubCategoryCountTextview;
-
+        TextView hubTitleTextView;
+        @BindView(R.id.hub_stat_textview)
+        TextView hubStatTextView;
         Context context;
 
         public ViewHolder(View itemView, Context context) {
@@ -128,10 +123,14 @@ public class HubCategoriesAdapter extends RecyclerView.Adapter<HubCategoriesAdap
 
 
         @Override
-        public void bind(HubCategory hubCategory) {
-            if (hubCategory == null) return;
-            hubCategoryTitleTextview.setText(isEmpty(hubCategory.getTitle()) ? "" : hubCategory.getTitle());
-            hubCategoryCountTextview.setText(String.valueOf(hubCategory.getHubsCount()));
+        public void bind(Hub hub) {
+            if (hub == null) return;
+            hubTitleTextView.setText(isEmpty(hub.getTitle()) ? "" : hub.getTitle());
+            StringBuilder statText = new StringBuilder();
+            statText.append(context.getResources().getQuantityString(R.plurals.plurals_subscribers, hub.getCountSubscribers(), hub.getCountSubscribers()));
+            statText.append(", ");
+            statText.append(context.getResources().getQuantityString(R.plurals.plurals_posts, hub.getCountPosts(), hub.getCountPosts()));
+            hubStatTextView.setText(statText);
         }
 
         @Override

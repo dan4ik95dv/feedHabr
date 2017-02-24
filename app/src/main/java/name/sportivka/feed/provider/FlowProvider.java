@@ -2,7 +2,6 @@ package name.sportivka.feed.provider;
 
 import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.list.FlowQueryList;
-import com.raizlabs.android.dbflow.sql.language.From;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 import com.raizlabs.android.dbflow.structure.database.transaction.ProcessModelTransaction;
@@ -24,6 +23,8 @@ import name.sportivka.feed.network.ConnectionDetector;
 import name.sportivka.feed.network.api.FlowApi;
 import retrofit2.Call;
 import retrofit2.Callback;
+
+import static android.text.TextUtils.isEmpty;
 
 /**
  * Created by daniil on 23.02.17.
@@ -131,10 +132,8 @@ public class FlowProvider {
 
     void getCacheFlowHubs(final int page, final String flow, final AsyncData<List<Hub>> asyncData) {
         int offset = (page - 1) * Constants.PER_PAGE;
-        From query = SQLite.select().from(Hub.class);
-        if (flow != null)
-            query.where(Flow_Table.name.eq(flow));
-        FlowQueryList<Hub> result = query.offset(offset).limit(Constants.PER_PAGE).flowQueryList();
+        FlowQueryList<Hub> result = isEmpty(flow) ? SQLite.select().from(Hub.class).offset(offset).limit(Constants.PER_PAGE).flowQueryList() : SQLite.select().from(Hub.class).where(Flow_Table.name.eq(flow)).offset(offset).limit(Constants.PER_PAGE).flowQueryList();
+
         int nextPage = result.getCount() == Constants.PER_PAGE ? page + 1 : 0;
         asyncData.onSuccess(result, nextPage, true);
     }

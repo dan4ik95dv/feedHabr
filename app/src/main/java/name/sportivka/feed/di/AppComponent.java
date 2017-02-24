@@ -7,6 +7,7 @@ import dagger.Component;
 import name.sportivka.feed.App;
 import name.sportivka.feed.di.scope.AppScope;
 import name.sportivka.feed.mvp.presenter.HubCategoriesPresenter;
+import name.sportivka.feed.mvp.presenter.HubsPresenter;
 import name.sportivka.feed.mvp.presenter.MainPresenter;
 import name.sportivka.feed.mvp.presenter.PostsPresenter;
 import name.sportivka.feed.mvp.presenter.SplashPresenter;
@@ -32,4 +33,6 @@ public interface AppComponent {
     void inject(PostsPresenter presenter);
 
     void inject(HubCategoriesPresenter presenter);
+
+    void inject(HubsPresenter presenter);
 }

@@ -1,6 +1,7 @@
 package name.sportivka.feed.mvp.presenter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -11,10 +12,12 @@ import java.util.List;
 import javax.inject.Inject;
 
 import name.sportivka.feed.App;
+import name.sportivka.feed.Constants;
 import name.sportivka.feed.model.feed.HubCategory;
 import name.sportivka.feed.mvp.Presenter;
 import name.sportivka.feed.mvp.view.HubCategoriesMvpView;
 import name.sportivka.feed.provider.HubProvider;
+import name.sportivka.feed.ui.activity.HubsActivity;
 import name.sportivka.feed.ui.adapter.HubCategoriesAdapter;
 import name.sportivka.feed.ui.widget.ItemClickSupport;
 
@@ -61,6 +64,14 @@ public class HubCategoriesPresenter implements Presenter<HubCategoriesMvpView> {
         itemClickListener = new ItemClickSupport.OnItemClickListener() {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                HubCategory hubCategory = hubCategoriesAdapter.getItem(position);
+                if (hubCategory != null) {
+                    Intent intent = new Intent(context, HubsActivity.class);
+                    intent.putExtra(Constants.CATEGORY, hubCategory.getAlias());
+                    intent.putExtra(Constants.TYPE_ACTION, position > 0 ? 1 : 0);
+                    intent.putExtra(Constants.CATEGORY_TITLE, hubCategory.getTitle());
+                    context.startActivity(intent);
+                }
 
             }
         };

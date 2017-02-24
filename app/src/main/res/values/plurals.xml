@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="plurals_number_of_new_comments">
+        <item quantity="other">%1$d новых комментариев</item>
+        <item quantity="one">%1$d новый комментарий</item>
+        <item quantity="few">%1$d новых комментария</item>
+        <item quantity="many">%1$d новых комментариев</item>
+    </plurals>
+    <plurals name="plurals_posts">
+        <item quantity="other">%1$d постов</item>
+        <item quantity="one">%1$d пост</item>
+        <item quantity="few">%1$d поста</item>
+        <item quantity="many">%1$d постов</item>
+    </plurals>
+    <plurals name="plurals_subscribers">
+        <item quantity="other">%1$d подписчиков</item>
+        <item quantity="one">%1$d подписчик</item>
+        <item quantity="few">%1$d подписчика</item>
+        <item quantity="many">%1$d подписчиков</item>
+    </plurals>
+</resources>
