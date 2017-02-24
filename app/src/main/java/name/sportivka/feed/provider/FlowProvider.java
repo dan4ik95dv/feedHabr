@@ -33,9 +33,9 @@ import static android.text.TextUtils.isEmpty;
 @AppScope
 public class FlowProvider {
 
-    FlowApi flowApi;
+    private FlowApi flowApi;
 
-    ConnectionDetector connectionDetector;
+    private ConnectionDetector connectionDetector;
 
     @Inject
     public FlowProvider(FlowApi flowApi, ConnectionDetector connectionDetector) {
@@ -70,7 +70,7 @@ public class FlowProvider {
             asyncData.onError();
     }
 
-    void getNetworkFlows(final AsyncData<List<Flow>, FlowCursorList<Flow>> asyncData) {
+    private void getNetworkFlows(final AsyncData<List<Flow>, FlowCursorList<Flow>> asyncData) {
         flowApi.getFlows().enqueue(new Callback<Response<List<Flow>>>() {
             @Override
             public void onResponse(Call<Response<List<Flow>>> call, retrofit2.Response<Response<List<Flow>>> response) {
@@ -89,7 +89,7 @@ public class FlowProvider {
         });
     }
 
-    void getNetworkFlowHubFeed(int page, String flow, String type, final AsyncData<List<Post>, FlowCursorList<Post>> asyncData) {
+    private void getNetworkFlowHubFeed(int page, String flow, String type, final AsyncData<List<Post>, FlowCursorList<Post>> asyncData) {
         flowApi.getFlowHubFeed(flow, type, page, Constants.INCLUDE, Constants.EXCLUDE_WITH_FLOW, Constants.PER_PAGE)
                 .enqueue(new Callback<Response<List<Post>>>() {
                     @Override
@@ -110,7 +110,7 @@ public class FlowProvider {
                 });
     }
 
-    void getNetworkFlowHubs(int page, String flow, final AsyncData<List<Hub>, FlowCursorList<Hub>> asyncData) {
+    private void getNetworkFlowHubs(int page, String flow, final AsyncData<List<Hub>, FlowCursorList<Hub>> asyncData) {
         flowApi.getFlowHubs(flow, page).enqueue(new Callback<Response<List<Hub>>>() {
             @Override
             public void onResponse(Call<Response<List<Hub>>> call, retrofit2.Response<Response<List<Hub>>> response) {
@@ -134,7 +134,7 @@ public class FlowProvider {
         getCacheFlowHubs(page, null, asyncData);
     }
 
-    void getCacheFlowHubs(final int page, final String flow, final AsyncData<List<Hub>, FlowCursorList<Hub>> asyncData) {
+    private void getCacheFlowHubs(final int page, final String flow, final AsyncData<List<Hub>, FlowCursorList<Hub>> asyncData) {
         int offset = (page - 1) * Constants.PER_PAGE;
         FlowCursorList<Hub> result = isEmpty(flow) ? SQLite.select().from(Hub.class).offset(offset).limit(Constants.PER_PAGE).cursorList() : SQLite.select().from(Hub.class).where(Flow_Table.name.eq(flow)).offset(offset).limit(Constants.PER_PAGE).cursorList();
 
@@ -142,18 +142,18 @@ public class FlowProvider {
         asyncData.onSuccessCache(result, nextPage);
     }
 
-    void getCacheFlowHubFeed(int page, String flow, String type, AsyncData<List<Post>, FlowCursorList<Post>> asyncData) {
+    private void getCacheFlowHubFeed(int page, String flow, String type, AsyncData<List<Post>, FlowCursorList<Post>> asyncData) {
         FlowCursorList<Post> result = SQLite.select().from(Post.class).where(Flow_Table.name.eq(flow)).cursorList();
         int nextPage = result.getCount() == Constants.PER_PAGE ? page + 1 : 0;
         asyncData.onSuccessCache(result, nextPage);
     }
 
-    void getCacheFlows(AsyncData<List<Flow>, FlowCursorList<Flow>> asyncData) {
+    private void getCacheFlows(AsyncData<List<Flow>, FlowCursorList<Flow>> asyncData) {
         FlowCursorList<Flow> result = SQLite.select().from(Flow.class).cursorList();
         asyncData.onSuccessCache(result, 0);
     }
 
-    void putFlowsToCache(final List<Flow> flows) {
+    private void putFlowsToCache(final List<Flow> flows) {
         FlowManager.getDatabase(MyDatabase.class)
                 .beginTransactionAsync(new ProcessModelTransaction.Builder<>(
                         new ProcessModelTransaction.ProcessModel<Flow>() {
@@ -177,11 +177,11 @@ public class FlowProvider {
 
     }
 
-    void putHubsToCache(final List<Hub> hubs) {
+    private void putHubsToCache(final List<Hub> hubs) {
         putHubsToCache(hubs, null);
     }
 
-    void putHubsToCache(final List<Hub> hubs, final String flow) {
+    private void putHubsToCache(final List<Hub> hubs, final String flow) {
         FlowManager.getDatabase(MyDatabase.class)
                 .beginTransactionAsync(new ProcessModelTransaction.Builder<>(
                         new ProcessModelTransaction.ProcessModel<Hub>() {
@@ -207,7 +207,7 @@ public class FlowProvider {
     }
 
 
-    void putPostsToCache(final List<Post> posts) {
+    private void putPostsToCache(final List<Post> posts) {
         FlowManager.getDatabase(MyDatabase.class)
                 .beginTransactionAsync(new ProcessModelTransaction.Builder<>(
                         new ProcessModelTransaction.ProcessModel<Post>() {
@@ -242,11 +242,5 @@ public class FlowProvider {
                 }).build().execute();
     }
 
-    public interface AsyncData<T, F> {
-        void onSuccess(T data, int nextPage);
 
-        void onSuccessCache(F data, int nextPage);
-
-        void onError();
-    }
 }

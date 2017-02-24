@@ -11,6 +11,7 @@ import name.sportivka.feed.App;
 import name.sportivka.feed.model.feed.Post;
 import name.sportivka.feed.mvp.Presenter;
 import name.sportivka.feed.mvp.view.APostMvpView;
+import name.sportivka.feed.provider.AsyncData;
 import name.sportivka.feed.provider.PostProvider;
 import name.sportivka.feed.ui.activity.BaseActivity;
 
@@ -86,7 +87,7 @@ public class APostPresenter implements Presenter<APostMvpView> {
         if (aPostMvpView == null) return;
         aPostMvpView.showProgress();
 
-        postProvider.getPost(postId, true, new PostProvider.AsyncData<Post, Post>() {
+        postProvider.getPost(postId, true, new AsyncData<Post, Post>() {
             @Override
             public void onSuccess(Post data, int nextPage) {
                 if (aPostMvpView == null) return;

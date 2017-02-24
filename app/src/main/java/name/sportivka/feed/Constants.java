@@ -40,6 +40,8 @@ public class Constants {
     public static final int BEST_TYPE = 0;
     public static final int INTERESTING_TYPE = 1;
     public static final int ALL_TYPE = 2;
+    public static final String CONTENT_TYPE = "application/json; charset=utf-8";
+    public static final String ALLTIME = "alltime";
 
     public enum SearchType {
         DATE("date"),

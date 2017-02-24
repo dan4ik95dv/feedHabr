@@ -31,11 +31,11 @@ import retrofit2.Callback;
 @AppScope
 public class PostProvider {
 
-    PostApi postApi;
+    private PostApi postApi;
 
-    ConnectionDetector connectionDetector;
+    private ConnectionDetector connectionDetector;
 
-    boolean cacheEnable = true;
+    private boolean cacheEnable = true;
 
     @Inject
     public PostProvider(PostApi postApi, ConnectionDetector connectionDetector) {
@@ -93,7 +93,7 @@ public class PostProvider {
             pasyncDatasts.onError();
     }
 
-    public void getHubFeed(int page, String hub, String type, PostProvider.AsyncData<List<Post>, FlowCursorList<Post>> asyncData) {
+    public void getHubFeed(int page, String hub, String type, AsyncData<List<Post>, FlowCursorList<Post>> asyncData) {
         if (cacheEnable) getCacheHubFeed(page, hub, type, asyncData);
 
         if (connectionDetector.isConnectingToInternet())
@@ -102,7 +102,7 @@ public class PostProvider {
             asyncData.onError();
     }
 
-    private void getNetworkHubFeed(int page, String hub, String type, final PostProvider.AsyncData<List<Post>, FlowCursorList<Post>> asyncData) {
+    private void getNetworkHubFeed(int page, String hub, String type, final AsyncData<List<Post>, FlowCursorList<Post>> asyncData) {
         postApi.getHubFeed(hub, type, page, Constants.INCLUDE, Constants.EXCLUDE_WITHOUT_FLOW, Constants.PER_PAGE).enqueue(new Callback<Response<List<Post>>>() {
             @Override
             public void onResponse(Call<Response<List<Post>>> call, retrofit2.Response<Response<List<Post>>> response) {
@@ -121,7 +121,7 @@ public class PostProvider {
         });
     }
 
-    private void getCacheHubFeed(int page, String hub, String type, PostProvider.AsyncData<List<Post>, FlowCursorList<Post>> asyncData) {
+    private void getCacheHubFeed(int page, String hub, String type, AsyncData<List<Post>, FlowCursorList<Post>> asyncData) {
         FlowCursorList<Post> result = SQLite.select().from(Post.class).where(Post_Table.hubsAliases.like("%" + hub + "%")).orderBy(Post_Table.timePublished, false).cursorList();
         int nextPage = result.getCount() == Constants.PER_PAGE ? page + 1 : 0;
         asyncData.onSuccessCache(result, nextPage);
@@ -259,7 +259,7 @@ public class PostProvider {
         asyncData.onSuccessCache(result, 0);
     }
 
-    void putPostToCache(final Post post) {
+    private void putPostToCache(final Post post) {
         FlowManager.getDatabase(MyDatabase.class)
                 .beginTransactionAsync(new ProcessModelTransaction.Builder<>(
                         new ProcessModelTransaction.ProcessModel<Post>() {
@@ -294,7 +294,7 @@ public class PostProvider {
                 }).build().execute();
     }
 
-    void putPostsToCache(final List<Post> posts) {
+    private void putPostsToCache(final List<Post> posts) {
         FlowManager.getDatabase(MyDatabase.class)
                 .beginTransactionAsync(new ProcessModelTransaction.Builder<>(
                         new ProcessModelTransaction.ProcessModel<Post>() {
@@ -329,16 +329,8 @@ public class PostProvider {
                 }).build().execute();
     }
 
-    public int getNextPage(Response response) {
+    private int getNextPage(Response response) {
         return response.getNextPage() != null && response.getNextPage().getNext() > 0 ? response.getNextPage().getNext() : 1;
     }
 
-
-    public interface AsyncData<T, F> {
-        void onSuccess(T data, int nextPage);
-
-        void onSuccessCache(F data, int nextPage);
-
-        void onError();
-    }
 }

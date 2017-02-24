@@ -22,7 +22,6 @@ public class ASplashPresenter implements Presenter<ASplashMvpView> {
     Bus bus;
 
     private ASplashMvpView aSplashMvpView;
-    private Context context;
     private BaseActivity activity;
     private Handler mHideHandler = new Handler();
     private Runnable mHideRunnable = new Runnable() {
@@ -36,7 +35,6 @@ public class ASplashPresenter implements Presenter<ASplashMvpView> {
 
     public ASplashPresenter(Context context) {
         inject(context);
-        this.context = context;
         this.activity = (BaseActivity) context;
     }
 

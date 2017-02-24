@@ -20,6 +20,7 @@ import name.sportivka.feed.model.feed.Hub;
 import name.sportivka.feed.model.feed.HubCategory;
 import name.sportivka.feed.mvp.Presenter;
 import name.sportivka.feed.mvp.view.AHubsMvpView;
+import name.sportivka.feed.provider.AsyncData;
 import name.sportivka.feed.provider.HubProvider;
 import name.sportivka.feed.ui.activity.APostsActivity;
 import name.sportivka.feed.ui.activity.BaseActivity;
@@ -108,7 +109,7 @@ public class AHubsPresenter implements Presenter<AHubsMvpView> {
         if (aHubsMvpView == null) return;
         aHubsMvpView.showProgress();
 
-        final HubProvider.AsyncData<List<Hub>, FlowCursorList<Hub>> asyncData = new HubProvider.AsyncData<List<Hub>, FlowCursorList<Hub>>() {
+        final AsyncData<List<Hub>, FlowCursorList<Hub>> asyncData = new AsyncData<List<Hub>, FlowCursorList<Hub>>() {
 
             @Override
             public void onSuccess(List<Hub> data, int nextPage) {

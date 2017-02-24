@@ -32,9 +32,9 @@ import static android.text.TextUtils.isEmpty;
 @AppScope
 public class HubProvider {
 
-    HubApi hubApi;
+    private HubApi hubApi;
 
-    ConnectionDetector connectionDetector;
+    private ConnectionDetector connectionDetector;
 
     @Inject
     public HubProvider(HubApi hubApi, ConnectionDetector connectionDetector) {
@@ -71,7 +71,7 @@ public class HubProvider {
     }
 
 
-    void getNetworkHubCategories(final AsyncData<List<HubCategory>, FlowCursorList<HubCategory>> asyncData) {
+    private void getNetworkHubCategories(final AsyncData<List<HubCategory>, FlowCursorList<HubCategory>> asyncData) {
         hubApi.getHubCategories().enqueue(new Callback<Response<List<HubCategory>>>() {
             @Override
             public void onResponse(Call<Response<List<HubCategory>>> call, retrofit2.Response<Response<List<HubCategory>>> response) {
@@ -90,7 +90,7 @@ public class HubProvider {
         });
     }
 
-    void getNetworkHubsForCategory(int page, final String category, final AsyncData<List<Hub>, FlowCursorList<Hub>> asyncData) {
+    private void getNetworkHubsForCategory(int page, final String category, final AsyncData<List<Hub>, FlowCursorList<Hub>> asyncData) {
         hubApi.getHubsForCategory(category, page).enqueue(new Callback<Response<List<Hub>>>() {
             @Override
             public void onResponse(Call<Response<List<Hub>>> call, retrofit2.Response<Response<List<Hub>>> response) {
@@ -110,7 +110,7 @@ public class HubProvider {
         });
     }
 
-    void getNetworkAllHubs(int page, final AsyncData<List<Hub>, FlowCursorList<Hub>> asyncData) {
+    private void getNetworkAllHubs(int page, final AsyncData<List<Hub>, FlowCursorList<Hub>> asyncData) {
         hubApi.getAllHubs(page).enqueue(new Callback<Response<List<Hub>>>() {
             @Override
             public void onResponse(Call<Response<List<Hub>>> call, retrofit2.Response<Response<List<Hub>>> response) {
@@ -130,11 +130,11 @@ public class HubProvider {
         });
     }
 
-    void getCacheHubs(final int page, final AsyncData<List<Hub>, FlowCursorList<Hub>> asyncData) {
+    private void getCacheHubs(final int page, final AsyncData<List<Hub>, FlowCursorList<Hub>> asyncData) {
         getCacheHubs(page, null, asyncData);
     }
 
-    void getCacheHubs(final int page, final String category, final AsyncData<List<Hub>, FlowCursorList<Hub>> asyncData) {
+    private void getCacheHubs(final int page, final String category, final AsyncData<List<Hub>, FlowCursorList<Hub>> asyncData) {
         int offset = (page - 1) * Constants.PER_PAGE;
         FlowCursorList<Hub> result =
                 isEmpty(category) ? SQLite.select().from(Hub.class).orderBy(Hub_Table.rating, false).offset(offset).limit(Constants.PER_PAGE).cursorList() : SQLite.select().from(Hub.class).where(Hub_Table.category.eq(category)).orderBy(Hub_Table.rating, false).offset(offset).limit(Constants.PER_PAGE).cursorList();
@@ -142,12 +142,12 @@ public class HubProvider {
         asyncData.onSuccessCache(result, nextPage);
     }
 
-    void getCacheHubCategories(final AsyncData<List<HubCategory>, FlowCursorList<HubCategory>> asyncData) {
+    private void getCacheHubCategories(final AsyncData<List<HubCategory>, FlowCursorList<HubCategory>> asyncData) {
         FlowCursorList<HubCategory> result = SQLite.select().from(HubCategory.class).cursorList();
         asyncData.onSuccessCache(result, 0);
     }
 
-    void putHubCategoriesToCache(final List<HubCategory> hubCategories) {
+    private void putHubCategoriesToCache(final List<HubCategory> hubCategories) {
         FlowManager.getDatabase(MyDatabase.class)
                 .beginTransactionAsync(new ProcessModelTransaction.Builder<>(
                         new ProcessModelTransaction.ProcessModel<HubCategory>() {
@@ -170,11 +170,11 @@ public class HubProvider {
                 }).build().execute();
     }
 
-    void putHubsToCache(final List<Hub> hubs) {
+    private void putHubsToCache(final List<Hub> hubs) {
         putHubsToCache(hubs, null);
     }
 
-    void putHubsToCache(final List<Hub> hubs, final String category) {
+    private void putHubsToCache(final List<Hub> hubs, final String category) {
         FlowManager.getDatabase(MyDatabase.class)
                 .beginTransactionAsync(new ProcessModelTransaction.Builder<>(
                         new ProcessModelTransaction.ProcessModel<Hub>() {
@@ -202,11 +202,4 @@ public class HubProvider {
     }
 
 
-    public interface AsyncData<T, F> {
-        void onSuccess(T data, int nextPage);
-
-        void onSuccessCache(F data, int nextPage);
-
-        void onError();
-    }
 }

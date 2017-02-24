@@ -17,7 +17,6 @@ import name.sportivka.feed.mvp.view.AMainMvpView;
 import name.sportivka.feed.provider.FlowProvider;
 import name.sportivka.feed.provider.HubProvider;
 import name.sportivka.feed.provider.PostProvider;
-import name.sportivka.feed.ui.adapter.PostsAdapter;
 
 /**
  * Created by daniil on 23.02.17.
@@ -36,7 +35,7 @@ public class AMainPresenter implements Presenter<AMainMvpView> {
 
     private ArrayAdapter<String> spinnerPostFilterAdapter;
     private AdapterView.OnItemSelectedListener spinnerPostFilteritemSelectedListener;
-    private PostsAdapter postsAdapter;
+
     private AMainMvpView AMainMvpView;
     private Context context;
     private int currentType = 0;
@@ -70,7 +69,6 @@ public class AMainPresenter implements Presenter<AMainMvpView> {
     }
 
     public void init() {
-        postsAdapter = new PostsAdapter(context);
         String[] filterArray = context.getResources().getStringArray(R.array.post_filter);
         spinnerPostFilterAdapter = new ArrayAdapter<>(
                 context, R.layout.filter_title, filterArray);
@@ -90,10 +88,6 @@ public class AMainPresenter implements Presenter<AMainMvpView> {
             }
         };
 
-    }
-
-    public PostsAdapter getPostsAdapter() {
-        return postsAdapter;
     }
 
     public ArrayAdapter<String> getSpinnerPostFilterAdapter() {

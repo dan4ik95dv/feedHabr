@@ -19,6 +19,7 @@ import name.sportivka.feed.Constants;
 import name.sportivka.feed.model.feed.HubCategory;
 import name.sportivka.feed.mvp.Presenter;
 import name.sportivka.feed.mvp.view.FHubCategoriesMvpView;
+import name.sportivka.feed.provider.AsyncData;
 import name.sportivka.feed.provider.HubProvider;
 import name.sportivka.feed.ui.activity.AHubsActivity;
 import name.sportivka.feed.ui.adapter.HubCategoriesAdapter;
@@ -86,7 +87,7 @@ public class FHubCategoriesPresenter implements Presenter<FHubCategoriesMvpView>
         if (fHubCategoriesMvpView == null) return;
         fHubCategoriesMvpView.showProgress();
 
-        hubProvider.getHubCategories(new HubProvider.AsyncData<List<HubCategory>, FlowCursorList<HubCategory>>() {
+        hubProvider.getHubCategories(new AsyncData<List<HubCategory>, FlowCursorList<HubCategory>>() {
 
 
             @Override

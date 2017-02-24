@@ -21,8 +21,7 @@ import name.sportivka.feed.model.feed.Hub;
 import name.sportivka.feed.model.feed.Post;
 import name.sportivka.feed.mvp.Presenter;
 import name.sportivka.feed.mvp.view.FPostsMvpView;
-import name.sportivka.feed.provider.FlowProvider;
-import name.sportivka.feed.provider.HubProvider;
+import name.sportivka.feed.provider.AsyncData;
 import name.sportivka.feed.provider.PostProvider;
 import name.sportivka.feed.ui.activity.APostActivity;
 import name.sportivka.feed.ui.adapter.PostsAdapter;
@@ -39,10 +38,6 @@ import static name.sportivka.feed.Constants.INTERESTING_TYPE;
 public class FPostsPresenter implements Presenter<FPostsMvpView> {
     @Inject
     Bus bus;
-    @Inject
-    FlowProvider flowProvider;
-    @Inject
-    HubProvider hubProvider;
     @Inject
     PostProvider postProvider;
 
@@ -120,12 +115,12 @@ public class FPostsPresenter implements Presenter<FPostsMvpView> {
         loadData(type, hub, false, false);
     }
 
-    public void loadData(int type, Hub hub, boolean update, final boolean append) {
+    void loadData(int type, Hub hub, boolean update, final boolean append) {
         postProvider.setCacheEnable(!append);
         if (fPostsMvpView == null) return;
         if (update) currentPage = 1;
         fPostsMvpView.showProgress();
-        final PostProvider.AsyncData<List<Post>, FlowCursorList<Post>> posts = new PostProvider.AsyncData<List<Post>, FlowCursorList<Post>>() {
+        final AsyncData<List<Post>, FlowCursorList<Post>> posts = new AsyncData<List<Post>, FlowCursorList<Post>>() {
             @Override
             public void onSuccess(List<Post> data, int nextPage) {
                 if (fPostsMvpView == null) return;
@@ -154,7 +149,7 @@ public class FPostsPresenter implements Presenter<FPostsMvpView> {
         } else {
             switch (type) {
                 case BEST_TYPE:
-                    postProvider.getPubBest("alltime", currentPage, posts);
+                    postProvider.getPubBest(Constants.ALLTIME, currentPage, posts);
                     break;
                 case INTERESTING_TYPE:
                     postProvider.getPubInteresting(currentPage, posts);
