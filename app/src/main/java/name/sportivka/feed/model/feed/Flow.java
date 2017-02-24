@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.annotation.Unique;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import name.sportivka.feed.model.MyDatabase;
@@ -16,6 +17,7 @@ import name.sportivka.feed.model.MyDatabase;
 public class Flow extends BaseModel {
     @Column(name = "flow_id")
     @PrimaryKey
+    @Unique
     @SerializedName("id")
     long flow_id;
     @Column

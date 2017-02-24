@@ -8,45 +8,90 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.RelativeLayout;
+import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.Spinner;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
-import name.sportivka.feed.App;
+import butterknife.ButterKnife;
 import name.sportivka.feed.R;
-import name.sportivka.feed.di.AppComponent;
+import name.sportivka.feed.di.activity.DaggerMainComponent;
+import name.sportivka.feed.di.activity.MainModule;
+import name.sportivka.feed.mvp.presenter.MainPresenter;
+import name.sportivka.feed.mvp.view.MainMvpView;
+import name.sportivka.feed.ui.fragment.HubCategoriesFragment;
+import name.sportivka.feed.ui.fragment.PostsFragment;
 
 public class MainActivity extends BaseActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements MainMvpView, NavigationView.OnNavigationItemSelectedListener {
+
+    @Inject
+    MainPresenter presenter;
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
-    @BindView(R.id.content_main)
-    RelativeLayout contentMain;
     @BindView(R.id.nav_view)
     NavigationView navigationView;
     @BindView(R.id.drawer_layout)
     DrawerLayout drawer;
 
+    @BindView(R.id.filter_spinner)
+    Spinner filterSpinner;
+    @BindView(R.id.container)
+    FrameLayout container;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        inject(app().appComponent());
+        DaggerMainComponent.builder().mainModule(new MainModule(this)).build().inject(this);
+        presenter.attachView(this);
         setContentView(R.layout.activity_main);
-        setSupportActionBar(toolbar);
+        ButterKnife.bind(this);
+        presenter.init();
+        initToolbar();
+        showPosts();
+    }
 
+    private void showPosts() {
+        setTitle("");
+        getSupportActionBar().setTitle("");
+        showSpinner(true);
+        Bundle bundle = new Bundle();
+        bundle.putInt(PostsFragment.ARG_TYPE, 0);
+        showFragment(PostsFragment.class, bundle);
+    }
+
+    private void showHubsCategories() {
+        setTitle("Потоки хабов");
+        getSupportActionBar().setTitle("Потоки хабов");
+        showFragment(HubCategoriesFragment.class, null);
+        showSpinner(false);
+    }
+
+    private void showSpinner(boolean show) {
+        filterSpinner.setVisibility(show ? View.VISIBLE : View.GONE);
+        getSupportActionBar().setDisplayShowTitleEnabled(!show);
+
+    }
+
+    private void initToolbar() {
+        setSupportActionBar(toolbar);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+        drawer.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
+        filterSpinner.setAdapter(presenter.getSpinnerPostFilterAdapter());
+        filterSpinner.setOnItemSelectedListener(presenter.getSpinnerPostFilteritemSelectedListener());
     }
 
-    protected App app() {
-        return (App) getApplication();
-    }
 
-    protected void inject(AppComponent appComponent) {
-        appComponent.inject(this);
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        presenter.detachView();
     }
 
     @Override
@@ -60,18 +105,12 @@ public class MainActivity extends BaseActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -80,10 +119,12 @@ public class MainActivity extends BaseActivity
 
         switch (item.getItemId()) {
             case R.id.nav_hubs:
-                break;
-            case R.id.nav_share:
+                showHubsCategories();
                 break;
             case R.id.nav_posts:
+                showPosts();
+                break;
+            case R.id.nav_share:
                 break;
         }
 

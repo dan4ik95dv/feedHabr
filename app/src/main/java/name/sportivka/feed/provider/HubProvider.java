@@ -1,7 +1,7 @@
 package name.sportivka.feed.provider;
 
 import com.raizlabs.android.dbflow.config.FlowManager;
-import com.raizlabs.android.dbflow.list.FlowQueryList;
+import com.raizlabs.android.dbflow.list.FlowCursorList;
 import com.raizlabs.android.dbflow.sql.language.From;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
@@ -42,28 +42,36 @@ public class HubProvider {
     }
 
 
-    public void getHubCategories(final AsyncData<List<HubCategory>> asyncData) {
+    public void getHubCategories(final AsyncData<List<HubCategory>, FlowCursorList<HubCategory>> asyncData) {
+        getCacheHubCategories(asyncData);
+
         if (connectionDetector.isConnectingToInternet())
             getNetworkHubCategories(asyncData);
         else
-            getCacheHubCategories();
+            asyncData.onError();
     }
 
-    public void getHubsForCategory(int page, String category, final AsyncData<List<Hub>> asyncData) {
+    public void getHubsForCategory(int page, String category, final AsyncData<List<Hub>, FlowCursorList<Hub>> asyncData) {
+        getCacheHubs(page, category, asyncData);
+
         if (connectionDetector.isConnectingToInternet())
             getNetworkHubsForCategory(page, category, asyncData);
         else
-            getCacheHubs(page, category, asyncData);
+            asyncData.onError();
     }
 
-    public void getAllHubs(int page, final AsyncData<List<Hub>> asyncData) {
+    public void getAllHubs(int page, final AsyncData<List<Hub>, FlowCursorList<Hub>> asyncData) {
+        getCacheHubs(page, asyncData);
+
         if (connectionDetector.isConnectingToInternet())
             getNetworkAllHubs(page, asyncData);
         else
-            getCacheHubs(page, asyncData);
+            asyncData.onError();
+
+
     }
 
-    void getNetworkHubCategories(final AsyncData<List<HubCategory>> asyncData) {
+    void getNetworkHubCategories(final AsyncData<List<HubCategory>, FlowCursorList<HubCategory>> asyncData) {
         hubApi.getHubCategories().enqueue(new Callback<Response<List<HubCategory>>>() {
             @Override
             public void onResponse(Call<Response<List<HubCategory>>> call, retrofit2.Response<Response<List<HubCategory>>> response) {
@@ -82,7 +90,7 @@ public class HubProvider {
         });
     }
 
-    void getNetworkHubsForCategory(int page, final String category, final AsyncData<List<Hub>> asyncData) {
+    void getNetworkHubsForCategory(int page, final String category, final AsyncData<List<Hub>, FlowCursorList<Hub>> asyncData) {
         hubApi.getHubsForCategory(category, page).enqueue(new Callback<Response<List<Hub>>>() {
             @Override
             public void onResponse(Call<Response<List<Hub>>> call, retrofit2.Response<Response<List<Hub>>> response) {
@@ -102,7 +110,7 @@ public class HubProvider {
         });
     }
 
-    void getNetworkAllHubs(int page, final AsyncData<List<Hub>> asyncData) {
+    void getNetworkAllHubs(int page, final AsyncData<List<Hub>, FlowCursorList<Hub>> asyncData) {
         hubApi.getAllHubs(page).enqueue(new Callback<Response<List<Hub>>>() {
             @Override
             public void onResponse(Call<Response<List<Hub>>> call, retrofit2.Response<Response<List<Hub>>> response) {
@@ -122,22 +130,23 @@ public class HubProvider {
         });
     }
 
-    void getCacheHubs(final int page, final AsyncData<List<Hub>> asyncData) {
+    void getCacheHubs(final int page, final AsyncData<List<Hub>, FlowCursorList<Hub>> asyncData) {
         getCacheHubs(page, null, asyncData);
     }
 
-    void getCacheHubs(final int page, final String category, final AsyncData<List<Hub>> asyncData) {
+    void getCacheHubs(final int page, final String category, final AsyncData<List<Hub>, FlowCursorList<Hub>> asyncData) {
         int offset = (page - 1) * Constants.PER_PAGE;
         From query = SQLite.select().from(Hub.class);
         if (category != null)
             query.where(Hub_Table.category.eq(category));
-        FlowQueryList<Hub> result = query.offset(offset).limit(Constants.PER_PAGE).flowQueryList();
+        FlowCursorList<Hub> result = query.offset(offset).limit(Constants.PER_PAGE).cursorList();
         int nextPage = result.getCount() == Constants.PER_PAGE ? page + 1 : 0;
-        asyncData.onSuccess(result, nextPage, true);
+        asyncData.onSuccessCache(result, nextPage);
     }
 
-    FlowQueryList<HubCategory> getCacheHubCategories() {
-        return SQLite.select().from(HubCategory.class).flowQueryList();
+    void getCacheHubCategories(final AsyncData<List<HubCategory>, FlowCursorList<HubCategory>> asyncData) {
+        FlowCursorList<HubCategory> result = SQLite.select().from(HubCategory.class).cursorList();
+        asyncData.onSuccessCache(result, 0);
     }
 
     void putHubCategoriesToCache(final List<HubCategory> hubCategories) {
@@ -173,6 +182,7 @@ public class HubProvider {
                         new ProcessModelTransaction.ProcessModel<Hub>() {
                             @Override
                             public void processModel(Hub hub, DatabaseWrapper wrapper) {
+                                hub.getFlow().save();
                                 if (category != null)
                                     hub.setCategory(category);
                                 hub.save();
@@ -194,8 +204,10 @@ public class HubProvider {
     }
 
 
-    public interface AsyncData<T> {
+    public interface AsyncData<T, F> {
         void onSuccess(T data, int nextPage, boolean isCache);
+
+        void onSuccessCache(F data, int nextPage);
 
         void onError();
     }

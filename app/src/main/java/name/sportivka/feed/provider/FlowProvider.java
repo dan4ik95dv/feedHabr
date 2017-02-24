@@ -184,6 +184,7 @@ public class FlowProvider {
                         new ProcessModelTransaction.ProcessModel<Hub>() {
                             @Override
                             public void processModel(Hub hub, DatabaseWrapper wrapper) {
+                                hub.getFlow().save();
                                 hub.save();
                             }
                         }).addAll(hubs).build())
@@ -209,6 +210,13 @@ public class FlowProvider {
                         new ProcessModelTransaction.ProcessModel<Post>() {
                             @Override
                             public void processModel(Post post, DatabaseWrapper wrapper) {
+                                post.getAuthor().save();
+                                post.getAuthor().getGeo().save();
+                                post.getAuthor().getCounters().save();
+                                post.getFlow().save();
+                                for (Hub hub : post.getHubs()) {
+                                    hub.save();
+                                }
                                 post.save();
                             }
                         }).addAll(posts).build())

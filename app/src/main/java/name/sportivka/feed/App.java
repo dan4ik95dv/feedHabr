@@ -9,6 +9,7 @@ import com.raizlabs.android.dbflow.config.FlowManager;
 import name.sportivka.feed.di.AppComponent;
 import name.sportivka.feed.di.AppModule;
 import name.sportivka.feed.di.DaggerAppComponent;
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 /**
  * Created by daniil on 23.02.17.
@@ -24,7 +25,11 @@ public class App extends Application {
             Stetho.initializeWithDefaults(this);
 
         FlowManager.init(new FlowConfig.Builder(this).openDatabasesOnInit(true).build());
-
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath("fonts/Roboto-RobotoRegular.ttf")
+                .setFontAttrId(R.attr.fontPath)
+                .build()
+        );
         initAppComponent();
     }
 

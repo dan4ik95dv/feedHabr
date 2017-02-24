@@ -6,6 +6,7 @@ import com.raizlabs.android.dbflow.annotation.ForeignKey;
 import com.raizlabs.android.dbflow.annotation.ForeignKeyAction;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.annotation.Unique;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import name.sportivka.feed.model.MyDatabase;
@@ -16,9 +17,10 @@ import name.sportivka.feed.model.MyDatabase;
 @Table(database = MyDatabase.class)
 public class User extends BaseModel {
     @PrimaryKey
-    @Column
+    @Column(name = "user_id")
+    @Unique
     @SerializedName("id")
-    long myId;
+    long user_id;
     @Column
     @SerializedName("avatar")
     String avatar;
@@ -75,7 +77,7 @@ public class User extends BaseModel {
     }
 
     public long getId() {
-        return myId;
+        return user_id;
     }
 
     public String getLogin() {

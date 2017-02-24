@@ -8,5 +8,6 @@ import name.sportivka.feed.mvp.MvpView;
 
 public interface SplashMvpView extends MvpView {
     void showSysBar();
+
     void hideSysBar();
 }

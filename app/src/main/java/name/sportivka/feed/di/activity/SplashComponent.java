@@ -1,4 +1,4 @@
-package name.sportivka.feed.di;
+package name.sportivka.feed.di.activity;
 
 import dagger.Component;
 import name.sportivka.feed.di.scope.SplashScope;

@@ -1,13 +1,35 @@
 <resources>
     <string name="app_name">Feed Habr</string>
-    <string name="title_activity_main">Main</string>
 
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="navigation_drawer_open"></string>
+    <string name="navigation_drawer_close"></string>
 
-    <string name="action_settings">Settings</string>
-
-    <string name="title_activity_splash">SplashActivity</string>
     <string name="hello">Feed Habr</string>
-    <string name="error_unknown">Unknown Error!</string>
+    <string name="error_unknown">Неизвестная ошибка</string>
+
+    <string name="later">Позже</string>
+    <string name="today">сегодня, в %s</string>
+    <string name="tomorrow">завтра, в %s</string>
+    <string name="later_header">позже</string>
+    <string name="soon_header">в ближайшее время</string>
+    <string name="today_header">сегодня</string>
+    <string name="tomorrow_header">завтра</string>
+    <string name="day_after_tomorrow_header">послезавтра</string>
+    <string name="day_after_tomorrow">Послезавтра</string>
+    <string name="going_in">через</string>
+    <string name="at_nigth">ночью</string>
+    <string name="at_morning">утром</string>
+    <string name="at_day">днем</string>
+    <string name="evening">вечером</string>
+    <string name="min_str">через %d мин"</string>
+    <string name="hour_str" formatted="false">через %d ч %d мин</string>
+
+    <string-array name="post_filter">
+        <item>Лучшие</item>
+        <item>Интересеные</item>
+        <item>Все подряд</item>
+    </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

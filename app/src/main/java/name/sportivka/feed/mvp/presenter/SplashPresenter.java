@@ -3,6 +3,7 @@ package name.sportivka.feed.mvp.presenter;
 import android.content.Context;
 import android.os.Handler;
 
+import name.sportivka.feed.App;
 import name.sportivka.feed.Constants;
 import name.sportivka.feed.mvp.Presenter;
 import name.sportivka.feed.mvp.view.SplashMvpView;
@@ -28,9 +29,9 @@ public class SplashPresenter implements Presenter<SplashMvpView> {
     };
 
     public SplashPresenter(Context context) {
+        inject(context);
         this.context = context;
-        this.activity = (BaseActivity) activity;
-        attachView((SplashMvpView) context);
+        this.activity = (BaseActivity) context;
     }
 
     @Override
@@ -43,12 +44,13 @@ public class SplashPresenter implements Presenter<SplashMvpView> {
         this.splashMvpView = null;
     }
 
-    private void delayedHide(int delayMillis) {
-        mHideHandler.removeCallbacks(mHideRunnable);
-        mHideHandler.postDelayed(mHideRunnable, delayMillis);
+
+    protected void inject(Context context) {
+        ((App) context.getApplicationContext()).appComponent().inject(this);
     }
 
     public void init() {
-        delayedHide(Constants.DELAY);
+        mHideHandler.removeCallbacks(mHideRunnable);
+        mHideHandler.postDelayed(mHideRunnable, Constants.DELAY);
     }
 }

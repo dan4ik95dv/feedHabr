@@ -7,8 +7,8 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import name.sportivka.feed.R;
-import name.sportivka.feed.di.DaggerSplashComponent;
-import name.sportivka.feed.di.SplashModule;
+import name.sportivka.feed.di.activity.DaggerSplashComponent;
+import name.sportivka.feed.di.activity.SplashModule;
 import name.sportivka.feed.mvp.presenter.SplashPresenter;
 import name.sportivka.feed.mvp.view.SplashMvpView;
 
@@ -23,8 +23,15 @@ public class SplashActivity extends BaseActivity implements SplashMvpView {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         DaggerSplashComponent.builder().splashModule(new SplashModule(this)).build().inject(this);
+        presenter.attachView(this);
         setContentView(R.layout.activity_splash);
         presenter.init();
+    }
+
+    @Override
+    protected void onDestroy() {
+        presenter.detachView();
+        super.onDestroy();
     }
 
     @Override

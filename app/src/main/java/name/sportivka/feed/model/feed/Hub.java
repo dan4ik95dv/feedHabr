@@ -6,6 +6,7 @@ import com.raizlabs.android.dbflow.annotation.ForeignKey;
 import com.raizlabs.android.dbflow.annotation.ForeignKeyReference;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.annotation.Unique;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import name.sportivka.feed.model.MyDatabase;
@@ -18,6 +19,7 @@ import name.sportivka.feed.model.MyDatabase;
 public class Hub extends BaseModel {
     @Column
     @PrimaryKey
+    @Unique
     @SerializedName("id")
     long myId;
     @Column
