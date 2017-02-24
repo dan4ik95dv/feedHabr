@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import org.parceler.Parcels;
 
@@ -44,6 +45,7 @@ public class FPostsFragment extends Fragment implements FPostsMvpView {
     Hub hub;
     @BindView(R.id.loading_progress)
     ProgressBar loadingProgress;
+
     private int type;
     private EndlessRecyclerViewScrollListener scrollListener;
 
@@ -116,6 +118,7 @@ public class FPostsFragment extends Fragment implements FPostsMvpView {
 
     @Override
     public void showError() {
+        Toast.makeText(getContext(), R.string.connection_error_msg, Toast.LENGTH_SHORT).show();
         loadingProgress.setVisibility(View.GONE);
         swipeRefreshLayout.setRefreshing(false);
     }

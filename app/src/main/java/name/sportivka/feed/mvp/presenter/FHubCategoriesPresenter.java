@@ -83,6 +83,10 @@ public class FHubCategoriesPresenter implements Presenter<FHubCategoriesMvpView>
         loadData();
     }
 
+    public void reload() {
+        loadData();
+    }
+
     private void loadData() {
         if (fHubCategoriesMvpView == null) return;
         fHubCategoriesMvpView.showProgress();
@@ -101,12 +105,13 @@ public class FHubCategoriesPresenter implements Presenter<FHubCategoriesMvpView>
             @Override
             public void onSuccessCache(FlowCursorList<HubCategory> data, int nextPage) {
                 hubCategoriesAdapter.setHubCategoryList(data);
+                fHubCategoriesMvpView.hideProgress();
             }
 
             @Override
             public void onError() {
                 if (fHubCategoriesMvpView == null) return;
-                fHubCategoriesMvpView.hideProgress();
+                fHubCategoriesMvpView.showError();
             }
         });
     }
@@ -118,5 +123,6 @@ public class FHubCategoriesPresenter implements Presenter<FHubCategoriesMvpView>
     public ItemClickSupport.OnItemClickListener getItemClickListener() {
         return itemClickListener;
     }
+
 
 }

@@ -127,6 +127,7 @@ public class AHubsPresenter implements Presenter<AHubsMvpView> {
             public void onError() {
                 if (aHubsMvpView == null) return;
                 aHubsMvpView.showError();
+                activity.finish();
             }
         };
 

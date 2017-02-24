@@ -6,6 +6,8 @@ import android.view.MenuItem;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
+import java.io.File;
+
 import javax.inject.Inject;
 
 import butterknife.BindView;
@@ -55,11 +57,24 @@ public class APostActivity extends BaseActivity implements APostMvpView {
         webView.getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
     }
 
-    public void initWebView() {
-        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            configureLayerType(this.postWebview);
-        }
+    private void enableWVCache(WebView webView) {
 
+        webView.getSettings().setDomStorageEnabled(true);
+        File dir = getCacheDir();
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+        webView.getSettings().setAppCachePath(dir.getPath());
+        webView.getSettings().setAllowFileAccess(true);
+        webView.getSettings().setAppCacheEnabled(true);
+        webView.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
+    }
+
+    public void initWebView() {
+        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN_MR2)
+            configureLayerType(this.postWebview);
+
+        enableWVCache(this.postWebview);
         this.postWebview.setPadding(8, 8, 8, 8);
         this.postWebview.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
         this.postWebview.setBackgroundColor(0);

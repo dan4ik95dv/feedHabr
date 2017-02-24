@@ -106,6 +106,10 @@ public class FPostsPresenter implements Presenter<FPostsMvpView> {
         loadData(event.getType(), event.getHub());
     }
 
+    public void reload() {
+        loadData(currentType, hub);
+    }
+
     public void loadData(int page) {
         currentPage = page;
         loadData(currentType, hub, false, true);

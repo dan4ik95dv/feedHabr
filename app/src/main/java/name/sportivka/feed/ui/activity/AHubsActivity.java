@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import javax.inject.Inject;
 
@@ -88,6 +89,7 @@ public class AHubsActivity extends BaseActivity implements AHubsMvpView {
 
     @Override
     public void showError() {
+        Toast.makeText(this, R.string.connection_error_msg, Toast.LENGTH_SHORT).show();
         loadingProgress.setVisibility(View.GONE);
     }
 }

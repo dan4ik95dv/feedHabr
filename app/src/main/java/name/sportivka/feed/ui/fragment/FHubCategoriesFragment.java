@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import javax.inject.Inject;
 
@@ -80,5 +81,11 @@ public class FHubCategoriesFragment extends Fragment implements FHubCategoriesMv
     @Override
     public void showProgress() {
         loadingProgress.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showError() {
+        Toast.makeText(getContext(), R.string.connection_error_msg, Toast.LENGTH_SHORT).show();
+        loadingProgress.setVisibility(View.GONE);
     }
 }

@@ -44,30 +44,30 @@ public class HubProvider {
 
 
     public void getHubCategories(final AsyncData<List<HubCategory>, FlowCursorList<HubCategory>> asyncData) {
-        getCacheHubCategories(asyncData);
+
 
         if (connectionDetector.isConnectingToInternet())
             getNetworkHubCategories(asyncData);
         else
-            asyncData.onError();
+            getCacheHubCategories(asyncData);
     }
 
     public void getHubsForCategory(int page, String category, final AsyncData<List<Hub>, FlowCursorList<Hub>> asyncData) {
-        getCacheHubs(page, category, asyncData);
+
 
         if (connectionDetector.isConnectingToInternet())
             getNetworkHubsForCategory(page, category, asyncData);
         else
-            asyncData.onError();
+            getCacheHubs(page, category, asyncData);
     }
 
     public void getAllHubs(int page, final AsyncData<List<Hub>, FlowCursorList<Hub>> asyncData) {
-        getCacheHubs(page, asyncData);
+
 
         if (connectionDetector.isConnectingToInternet())
             getNetworkAllHubs(page, asyncData);
         else
-            asyncData.onError();
+            getCacheHubs(page, asyncData);
     }
 
 
@@ -139,12 +139,19 @@ public class HubProvider {
         FlowCursorList<Hub> result =
                 isEmpty(category) ? SQLite.select().from(Hub.class).orderBy(Hub_Table.rating, false).offset(offset).limit(Constants.PER_PAGE).cursorList() : SQLite.select().from(Hub.class).where(Hub_Table.category.eq(category)).orderBy(Hub_Table.rating, false).offset(offset).limit(Constants.PER_PAGE).cursorList();
         int nextPage = result.getCount() == Constants.PER_PAGE ? page + 1 : 0;
-        asyncData.onSuccessCache(result, nextPage);
+        if (result.getCount() > 0)
+            asyncData.onSuccessCache(result, nextPage);
+        else
+            asyncData.onError();
+
     }
 
     private void getCacheHubCategories(final AsyncData<List<HubCategory>, FlowCursorList<HubCategory>> asyncData) {
         FlowCursorList<HubCategory> result = SQLite.select().from(HubCategory.class).cursorList();
-        asyncData.onSuccessCache(result, 0);
+        if (result.getCount() > 0)
+            asyncData.onSuccessCache(result, 0);
+        else
+            asyncData.onError();
     }
 
     private void putHubCategoriesToCache(final List<HubCategory> hubCategories) {

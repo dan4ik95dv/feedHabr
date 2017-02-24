@@ -29,4 +29,5 @@
         android:layout_gravity="center"
         android:layout_marginBottom="@dimen/margin_mini"
         android:visibility="gone" />
+
 </FrameLayout>

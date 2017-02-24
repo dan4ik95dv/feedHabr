@@ -10,4 +10,6 @@ public interface FHubCategoriesMvpView extends MvpView {
     void hideProgress();
 
     void showProgress();
+
+    void showError();
 }
