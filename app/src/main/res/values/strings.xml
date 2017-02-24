@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Feed Habr</string>
 
-    <string name="navigation_drawer_open"></string>
-    <string name="navigation_drawer_close"></string>
+    <string name="navigation_drawer_open">Меню открыто</string>
+    <string name="navigation_drawer_close">Меню закрыто</string>
 
     <string name="hello">Feed Habr</string>
     <string name="error_unknown">Неизвестная ошибка</string>

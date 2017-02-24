@@ -43,6 +43,7 @@ public class FPostsPresenter implements Presenter<FPostsMvpView> {
     private ItemClickSupport.OnItemClickListener itemClickListener;
     private FPostsMvpView fPostsMvpView;
     private Context context;
+    private Hub hub;
     private int currentType = 0;
     private int currentPage = 1;
 
@@ -77,28 +78,33 @@ public class FPostsPresenter implements Presenter<FPostsMvpView> {
         refreshListener = new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                loadData(currentType);
+                loadData(currentType, hub, true);
             }
         };
     }
 
     @Subscribe
     public void typePosts(TypePostsEvent event) {
+        currentType = event.getType();
+        hub = event.getHub();
+        currentPage = 1;
         loadData(event.getType(), event.getHub());
     }
 
-
-    public void loadData(int type) {
-        loadData(type, null);
+    public void loadData(int type, Hub hub) {
+        loadData(type, hub, false);
     }
 
-    public void loadData(int type, Hub hub) {
+    public void loadData(int type, Hub hub, boolean update) {
+        if (fPostsMvpView == null) return;
+        if (update) currentPage = 1;
         fPostsMvpView.showProgress();
         final PostProvider.AsyncData<List<Post>, FlowCursorList<Post>> posts = new PostProvider.AsyncData<List<Post>, FlowCursorList<Post>>() {
             @Override
             public void onSuccess(List<Post> data, int nextPage) {
-                postsAdapter.setPostList(data);
+                if (fPostsMvpView == null) return;
                 fPostsMvpView.hideProgress();
+                postsAdapter.setPostList(data);
                 currentPage = nextPage;
             }
 
@@ -109,6 +115,7 @@ public class FPostsPresenter implements Presenter<FPostsMvpView> {
 
             @Override
             public void onError() {
+                if (fPostsMvpView == null) return;
                 fPostsMvpView.showError();
             }
         };

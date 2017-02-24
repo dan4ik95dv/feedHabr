@@ -115,7 +115,7 @@ public class PostProvider {
     }
 
     private void getCacheHubFeed(int page, String hub, String type, PostProvider.AsyncData<List<Post>, FlowCursorList<Post>> asyncData) {
-        FlowCursorList<Post> result = SQLite.select().from(Post.class).where(Post_Table.hubsAliases.like("%" + hub + "%")).cursorList();
+        FlowCursorList<Post> result = SQLite.select().from(Post.class).where(Post_Table.hubsAliases.like("%" + hub + "%")).orderBy(Post_Table.timePublished, false).cursorList();
         int nextPage = result.getCount() == Constants.PER_PAGE ? page + 1 : 0;
         asyncData.onSuccessCache(result, nextPage);
     }
@@ -221,7 +221,7 @@ public class PostProvider {
     }
 
     private void getCachePubAll(int page, AsyncData<List<Post>, FlowCursorList<Post>> asyncData) {
-        FlowCursorList<Post> result = SQLite.select().from(Post.class).cursorList();
+        FlowCursorList<Post> result = SQLite.select().from(Post.class).orderBy(Post_Table.timePublished, false).cursorList();
         int nextPage = result.getCount() == Constants.PER_PAGE ? page + 1 : 0;
         asyncData.onSuccessCache(result, nextPage);
     }

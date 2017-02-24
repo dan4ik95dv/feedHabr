@@ -36,7 +36,7 @@ public class FHubCategoriesPresenter implements Presenter<FHubCategoriesMvpView>
 
     private HubCategoriesAdapter hubCategoriesAdapter;
     private ItemClickSupport.OnItemClickListener itemClickListener;
-    private FHubCategoriesMvpView FHubCategoriesMvpView;
+    private FHubCategoriesMvpView fHubCategoriesMvpView;
     private Context context;
 
 
@@ -56,13 +56,13 @@ public class FHubCategoriesPresenter implements Presenter<FHubCategoriesMvpView>
     @Override
     public void attachView(FHubCategoriesMvpView view) {
         this.bus.register(this);
-        this.FHubCategoriesMvpView = view;
+        this.fHubCategoriesMvpView = view;
     }
 
     @Override
     public void detachView() {
         this.bus.unregister(this);
-        this.FHubCategoriesMvpView = null;
+        this.fHubCategoriesMvpView = null;
     }
 
     public void init() {
@@ -83,7 +83,8 @@ public class FHubCategoriesPresenter implements Presenter<FHubCategoriesMvpView>
     }
 
     private void loadData() {
-        FHubCategoriesMvpView.showProgress();
+        if (fHubCategoriesMvpView == null) return;
+        fHubCategoriesMvpView.showProgress();
 
         hubProvider.getHubCategories(new HubProvider.AsyncData<List<HubCategory>, FlowCursorList<HubCategory>>() {
 
@@ -91,7 +92,9 @@ public class FHubCategoriesPresenter implements Presenter<FHubCategoriesMvpView>
             @Override
             public void onSuccess(List<HubCategory> data, int nextPage) {
                 hubCategoriesAdapter.setHubCategoryList(data);
-                FHubCategoriesMvpView.hideProgress();
+                if (fHubCategoriesMvpView == null) return;
+                fHubCategoriesMvpView.hideProgress();
+
             }
 
             @Override
@@ -101,7 +104,8 @@ public class FHubCategoriesPresenter implements Presenter<FHubCategoriesMvpView>
 
             @Override
             public void onError() {
-                FHubCategoriesMvpView.hideProgress();
+                if (fHubCategoriesMvpView == null) return;
+                fHubCategoriesMvpView.hideProgress();
             }
         });
     }

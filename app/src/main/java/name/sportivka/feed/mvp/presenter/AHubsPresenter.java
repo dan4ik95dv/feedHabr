@@ -105,13 +105,16 @@ public class AHubsPresenter implements Presenter<AHubsMvpView> {
 
 
     private void loadData() {
+        if (aHubsMvpView == null) return;
         aHubsMvpView.showProgress();
+
         final HubProvider.AsyncData<List<Hub>, FlowCursorList<Hub>> asyncData = new HubProvider.AsyncData<List<Hub>, FlowCursorList<Hub>>() {
 
             @Override
             public void onSuccess(List<Hub> data, int nextPage) {
-                hubsAdapter.setHubList(data);
+                if (aHubsMvpView == null) return;
                 aHubsMvpView.hideProgress();
+                hubsAdapter.setHubList(data);
             }
 
             @Override
@@ -121,6 +124,7 @@ public class AHubsPresenter implements Presenter<AHubsMvpView> {
 
             @Override
             public void onError() {
+                if (aHubsMvpView == null) return;
                 aHubsMvpView.hideProgress();
             }
         };

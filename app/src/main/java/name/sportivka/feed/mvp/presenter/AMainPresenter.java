@@ -1,8 +1,6 @@
 package name.sportivka.feed.mvp.presenter;
 
 import android.content.Context;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -20,7 +18,6 @@ import name.sportivka.feed.provider.FlowProvider;
 import name.sportivka.feed.provider.HubProvider;
 import name.sportivka.feed.provider.PostProvider;
 import name.sportivka.feed.ui.adapter.PostsAdapter;
-import name.sportivka.feed.ui.widget.ItemClickSupport;
 
 /**
  * Created by daniil on 23.02.17.
@@ -40,8 +37,6 @@ public class AMainPresenter implements Presenter<AMainMvpView> {
     private ArrayAdapter<String> spinnerPostFilterAdapter;
     private AdapterView.OnItemSelectedListener spinnerPostFilteritemSelectedListener;
     private PostsAdapter postsAdapter;
-    private SwipeRefreshLayout.OnRefreshListener refreshListener;
-    private ItemClickSupport.OnItemClickListener itemClickListener;
     private AMainMvpView AMainMvpView;
     private Context context;
     private int currentType = 0;
@@ -94,31 +89,7 @@ public class AMainPresenter implements Presenter<AMainMvpView> {
 
             }
         };
-        refreshListener = new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                loadData(currentType);
-            }
-        };
-        itemClickListener = new ItemClickSupport.OnItemClickListener() {
-            @Override
-            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
 
-            }
-        };
-    }
-
-    private void loadData(int currentType) {
-        // TODO: 24.02.17 Sent to fragment
-    }
-
-
-    public ItemClickSupport.OnItemClickListener getItemClickListener() {
-        return itemClickListener;
-    }
-
-    public SwipeRefreshLayout.OnRefreshListener getRefreshListener() {
-        return refreshListener;
     }
 
     public PostsAdapter getPostsAdapter() {
